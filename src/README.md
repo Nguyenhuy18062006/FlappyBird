@@ -61,15 +61,19 @@ Sau khi Clone hoàn tất, dự án sẽ sẵn sàng để mở và làm việc 
 
 
 ## 2:Cấu trúc dự tính
+```text
 FlappyBird/
 │
 ├── src/
 │   └── flappybird/
+│       │
 │       ├── Main.java
-│       ├── GamePanel.java
-│       ├── Game.java
-│       ├── Bird.java
-│       ├── Pipe.java
+│       │
+│       ├── game/
+│       │   ├── Game.java
+│       │   ├── GamePanel.java
+│       │   ├── Bird.java
+│       │   └── Pipe.java
 │       │
 │       ├── database/
 │       │   ├── DatabaseConnection.java
@@ -101,11 +105,13 @@ FlappyBird/
 ├── database/
 │   └── flappybird.sql
 │
+├── .env
+├── .gitignore
 └── README.md
-
+```
 
 ## 3: Database
-
+```text
 users
 ├── id
 ├── username
@@ -135,3 +141,4 @@ settings
 ├── pipe_skin
 ├── background_skin
 └── sound_volume
+```
