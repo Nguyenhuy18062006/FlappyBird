@@ -5,13 +5,14 @@ import javax.swing.JFrame;
 
 public class Main {
     public static void main(String[] args) {
+        
         JFrame frame = new JFrame();
         //tạo 1 frame (Cửa sổ)
         
         frame.setTitle("Flappy Bird");
         //Đặt tên cho cửa sổ
         
-        frame.setSize(800, 600);
+        frame.setSize(860, 540);
         //Kích thước tính bằng pixel 
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

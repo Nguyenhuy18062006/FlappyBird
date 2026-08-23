@@ -73,6 +73,9 @@ FlappyBird/
 │       │   ├── Game.java
 │       │   ├── GamePanel.java
 │       │   ├── Bird.java
+│       │   ├── PipePair.java
+│       │   ├── Background.java
+│       │   ├── Ground.java
 │       │   └── Pipe.java
 │       │
 │       ├── database/
@@ -95,7 +98,8 @@ FlappyBird/
 │   ├── images/
 │   │   ├── birds/
 │   │   ├── pipes/
-│   │   └── backgrounds/
+│   │   ├── backgrounds/
+│   │   └── grounds/
 │   │
 │   └── sounds/
 │       ├── jump.wav
