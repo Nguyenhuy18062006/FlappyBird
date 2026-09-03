@@ -44,4 +44,8 @@ public class Pipe {
     public void update(){
         x -= speed;
     }
+
+    public int getX() {
+        return x;
+    }
 }

@@ -28,6 +28,14 @@ public class PipePair {
         topPipe.draw(g);
         bottomPipe.draw(g);
     }
+
+    public int getX(){
+        return topPipe.getX();
+    }
+
+    public boolean isOffScreen(){
+        return getX() + 70 < 0; //Vì pipe rộng 70.
+    }
 }
 // gap = bottomY - (topY + pipeHeight)
 

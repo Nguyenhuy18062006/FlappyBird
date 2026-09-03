@@ -76,6 +76,7 @@ FlappyBird/
 │       │   ├── PipePair.java
 │       │   ├── Background.java
 │       │   ├── Ground.java
+│       │   ├── SoundManager.java
 │       │   └── Pipe.java
 │       │
 │       ├── database/

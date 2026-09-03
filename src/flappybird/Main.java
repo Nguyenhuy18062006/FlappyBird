@@ -20,7 +20,7 @@ public class Main {
         //Còn có thì chương trình sẽ kết thúc.
         
         frame.setLocationRelativeTo(null);
-        //Đặt cửa sổ xuất hiện ở giữa màn hình       
+        //Đặt cửa sổ xuất hiện ở giữa màn hình 
         
         GamePanel gamePanel = new GamePanel();
         frame.add(gamePanel);
