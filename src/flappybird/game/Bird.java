@@ -2,6 +2,7 @@ package flappybird.game;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 public class Bird {
@@ -47,6 +48,10 @@ public class Bird {
         return y;
     }
 
+    public int getHeight() {
+        return height;
+    }
+
     public void update(){
         velocityY += gravity;
         y += velocityY;
@@ -57,5 +62,9 @@ public class Bird {
 
     public void jump(){
         velocityY = -8;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x, y, width, height);
     }
 }

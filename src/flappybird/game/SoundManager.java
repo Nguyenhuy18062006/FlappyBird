@@ -31,7 +31,7 @@ public class SoundManager {
             dieSound.open(dieAudio);
 
             setVolume(jumpSound, -10.0f);
-            setVolume(dieSound, -10.0f);
+            setVolume(dieSound, -20.0f);
         } catch (Exception e) {
             System.out.println("Khong the load sound" + e.getMessage());
         }

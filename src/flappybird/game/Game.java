@@ -65,7 +65,7 @@ public class Game {
             if (pipes.get(0).isOffScreen()) {
                 pipes.remove(0);
 
-                PipePair lastPipe = pipes.get(pipes.size() - 1);
+                PipePair lastPipe = pipes.get(pipes.size() - 1); 
 
                 pipes.add(new PipePair(lastPipe.getX() + 400));
             }
@@ -90,6 +90,19 @@ public class Game {
 
             if(ground2.getX() <= -960){
                 ground2.setX(ground1.getX() + 960);
+            }
+
+            for(PipePair pipe : pipes){
+                if(pipe.isColliding(bird.getBounds())){ //Kiểm tra có đụng không
+                    die(); //Tạo tiếng chết
+                    state = GameState.GAME_OVER; //True thì thực hiện lệnh này
+                    return;
+                }
+            }
+            if(bird.getY() + bird.getHeight() >= 445){ //Nếu chim đi quá 445px y thì true
+                die(); //Tọa tiếng chết
+                state = GameState.GAME_OVER; //Đúng lệnh thực thi
+                return;
             }
         }
     }

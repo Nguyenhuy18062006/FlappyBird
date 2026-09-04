@@ -3,6 +3,7 @@ package flappybird.game;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 public class Pipe {
@@ -47,5 +48,9 @@ public class Pipe {
 
     public int getX() {
         return x;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x, y, width, height);
     }
 }
