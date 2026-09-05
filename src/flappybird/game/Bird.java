@@ -2,7 +2,7 @@ package flappybird.game;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
 import javax.swing.ImageIcon;
 
 public class Bird {
@@ -64,7 +64,7 @@ public class Bird {
         velocityY = -8;
     }
 
-    public Rectangle getBounds(){
-        return new Rectangle(x, y, width, height);
+    public Ellipse2D getBounds(){
+        return new Ellipse2D.Double(x, y, width, height);
     }
 }

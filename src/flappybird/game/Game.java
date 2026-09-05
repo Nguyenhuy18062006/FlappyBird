@@ -17,7 +17,7 @@ public class Game {
     private GameState state;
     private long startTime;
 
-    public Game(){
+    private void initializeGame(){ //Khởi tạo game để dễ sử dụng hơn tránh lặp code
         bird = new Bird(200, 200);
         pipes = new ArrayList<>();
 
@@ -31,8 +31,12 @@ public class Game {
 
         ground1 = new Ground(0, 445);
         ground2 = new Ground(960, 445);
+    }
 
-        soundManager = new SoundManager();
+    public Game(){
+        initializeGame();
+
+        soundManager = new SoundManager();//âm thanh không phải trạng thái của 1 ván game không cần tạo lại
 
         state = GameState.READY;
     }
@@ -44,7 +48,6 @@ public class Game {
     }
 
     public void update(){
-
         if(state == GameState.STARTING){  
             background1.update();
             background2.update();
@@ -104,7 +107,18 @@ public class Game {
                 state = GameState.GAME_OVER; //Đúng lệnh thực thi
                 return;
             }
+            if(bird.getY() <= -200){
+                die();
+                state = GameState.GAME_OVER;
+                return;
+            }
         }
+    }
+
+    public void resetGame(){
+        initializeGame();
+
+        state = GameState.READY;
     }
 
     public Bird getBird(){
@@ -131,6 +145,10 @@ public class Game {
         if(state == GameState.READY){
             state = GameState.STARTING;
             startTime = System.currentTimeMillis();
+            return;
+        }
+        if(state == GameState.GAME_OVER){
+            resetGame(); //reset nếu game thua sau khi nhấn
             return;
         }
 
