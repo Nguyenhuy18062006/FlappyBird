@@ -7,7 +7,9 @@ public class PipePair {
     private Pipe topPipe;
     private Pipe bottomPipe;
 
-    public PipePair(int x){
+    private boolean scored;
+
+    public PipePair(int x ,Skin skin){
         int gap = 150;
         
         int minGapY = 40; //Ống trên ngắn nhất
@@ -18,9 +20,11 @@ public class PipePair {
         int topY = gapY - 320; //tính ống trên topY = 250 - 320 = -70
         int bottomY = gapY + gap; //Tính ống dưới
 
-        topPipe = new Pipe(x, topY, true);
+        topPipe = new Pipe(x, topY, true, skin);
 
-        bottomPipe = new Pipe(x, bottomY, false);
+        bottomPipe = new Pipe(x, bottomY, false, skin);
+
+        scored = false;
     }
 
     public void update(){
@@ -45,6 +49,14 @@ public class PipePair {
         return topPipe.getBounds().intersects(birdBounds.getBounds()) || //Đụng top chết
         bottomPipe.getBounds().intersects(birdBounds.getBounds()); //Đụng bottom chết
         //Không đụng false sống
+    }
+
+    public boolean isScored(){
+        return scored;
+    }
+
+    public void setScored(boolean scored){
+        this.scored = scored;
     }
 }
 // Bước 1:

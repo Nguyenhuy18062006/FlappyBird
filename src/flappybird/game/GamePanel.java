@@ -1,6 +1,7 @@
 package flappybird.game;
 
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -45,6 +46,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         game.getGround2().draw(g);
         
         game.getBird().draw(g);
+
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Score: " + game.getScore(), 20, 30);
     }
 
     @Override

@@ -17,23 +17,37 @@ public class Game {
     private GameState state;
     private long startTime;
 
+    private int score;
+
+    private Skin selectedBirdSkin;
+    private Skin selectedPipeSkin;
+    private Skin selectedBackgroundSkin;
+    private Skin selectedGroundSkin;
+
     private void initializeGame(){ //Khởi tạo game để dễ sử dụng hơn tránh lặp code
-        bird = new Bird(200, 200);
+        bird = new Bird(200, 200, selectedBirdSkin);
         pipes = new ArrayList<>();
 
-        pipes.add(new PipePair(600));
-        pipes.add(new PipePair(1000));
-        pipes.add(new PipePair(1400));
-        pipes.add(new PipePair(1800));
+        pipes.add(new PipePair(600, selectedPipeSkin));
+        pipes.add(new PipePair(1000, selectedPipeSkin));
+        pipes.add(new PipePair(1400, selectedPipeSkin));
+        pipes.add(new PipePair(1800, selectedPipeSkin));
 
-        background1 = new Background(0,0 );
-        background2 = new Background(960, 0);
+        background1 = new Background(0,0 , selectedBackgroundSkin);
+        background2 = new Background(960, 0, selectedBackgroundSkin);
 
-        ground1 = new Ground(0, 445);
-        ground2 = new Ground(960, 445);
+        ground1 = new Ground(0, 445, selectedGroundSkin);
+        ground2 = new Ground(960, 445, selectedGroundSkin);
+
+        score = 0;
     }
 
     public Game(){
+        SkinManager skinManager = new SkinManager();
+        selectedBirdSkin = skinManager.getBirdSkins().get(2);
+        selectedPipeSkin = skinManager.getPipeSkins().get(2);
+        selectedGroundSkin = skinManager.getGroundSkins().get(2);
+        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(2);
         initializeGame();
 
         soundManager = new SoundManager();//âm thanh không phải trạng thái của 1 ván game không cần tạo lại
@@ -63,6 +77,13 @@ public class Game {
             bird.update();   
             for(PipePair pipe : pipes){
                 pipe.update();
+                // Kiểm tra chim đã vượt qua cặp ống và cặp ống này chưa được tính điểm
+                if(!pipe.isScored() && pipe.getX() + 70 < bird.getX()){ //!pipe.isScored() → ống chưa được tính điểm
+                    score++;
+                    // Đánh dấu cặp ống đã được tính điểm để tránh cộng nhiều lần
+                    pipe.setScored(true);
+                    soundManager.playScore();
+                }
             }
 
             if (pipes.get(0).isOffScreen()) {
@@ -70,7 +91,7 @@ public class Game {
 
                 PipePair lastPipe = pipes.get(pipes.size() - 1); 
 
-                pipes.add(new PipePair(lastPipe.getX() + 400));
+                pipes.add(new PipePair(lastPipe.getX() + 400, selectedPipeSkin));
             }
 
             background1.update();
@@ -166,5 +187,9 @@ public class Game {
 
     public void setState(GameState state){
         this.state = state;
+    }
+
+    public int getScore(){
+        return score;
     }
 }

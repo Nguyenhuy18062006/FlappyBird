@@ -14,7 +14,7 @@ public class Background {
 
     private int speed;
 
-    public Background(int x, int y) {
+    public Background(int x, int y, Skin skin) {
         this.x = x;
         this.y = y;
         
@@ -23,7 +23,7 @@ public class Background {
 
         this.speed = 1;
 
-        image = new ImageIcon("resources/images/backgrounds/bg_spring.png").getImage();
+        image = new ImageIcon(skin.getImagePath()).getImage();
     }
 
     public void draw(Graphics g){

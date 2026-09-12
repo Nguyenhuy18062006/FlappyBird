@@ -10,6 +10,7 @@ public class SoundManager {
     
     private Clip jumpSound;
     private Clip dieSound;
+    private Clip scoreSound;
 
     private void setVolume(Clip clip, float volume) {
         if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
@@ -24,14 +25,19 @@ public class SoundManager {
         
             AudioInputStream dieAudio = AudioSystem.getAudioInputStream(new File("resources/sounds/die.wav"));
 
+            AudioInputStream scoreAudio = AudioSystem.getAudioInputStream(new File("resources/sounds/score.wav"));
+
             jumpSound = AudioSystem.getClip();
             dieSound = AudioSystem.getClip();
+            scoreSound = AudioSystem.getClip();
 
             jumpSound.open(jumpAudio);
             dieSound.open(dieAudio);
+            scoreSound.open(scoreAudio);
 
             setVolume(jumpSound, -10.0f);
             setVolume(dieSound, -20.0f);
+            setVolume(scoreSound, -10.0f);
         } catch (Exception e) {
             System.out.println("Khong the load sound" + e.getMessage());
         }
@@ -48,6 +54,13 @@ public class SoundManager {
         if(dieSound != null){
             dieSound.setFramePosition(0);
             dieSound.start();
+        }
+    }
+
+    public void playScore(){
+        if(scoreSound != null){
+            scoreSound.setFramePosition( 0);
+            scoreSound.start();
         }
     }
 }

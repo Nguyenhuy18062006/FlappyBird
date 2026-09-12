@@ -18,7 +18,7 @@ public class Pipe {
 
     private boolean flipped;
 
-    public Pipe(int x, int y, boolean flipped){
+    public Pipe(int x, int y, boolean flipped, Skin skin){
         this.x = x;
         this.y = y;
 
@@ -29,7 +29,7 @@ public class Pipe {
 
         this.flipped = flipped;
 
-        image = new ImageIcon("resources/images/pipes/pipe_spring.png").getImage();
+        image = new ImageIcon(skin.getImagePath()).getImage();
     }
 
     public void draw(Graphics g){

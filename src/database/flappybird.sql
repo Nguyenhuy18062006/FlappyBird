@@ -1,0 +1,35 @@
+CREATE DATABASE FlappyBird;
+
+USE FlappyBird;
+
+CREATE TABLE USERS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(155) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    hightest_score INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE SCORES(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    score INT NOT NULL,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES USERS(id)
+);
+
+CREATE TABLE USER_SKINS (
+	user_id INT NOT NULL,
+    skin_id INT NOT NULL,
+    PRIMARY KEY (user_id, skin_id),
+    
+    FOREIGN KEY (user_id) REFERENCES USERS(id),
+    FOREIGN KEY (skin_id) REFERENCES SKINS(id)
+);
+
+CREATE TABLE SKINS(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    skin_name VARCHAR(100) NOT NULL,
+    skin_type VARCHAR(50) NOT NULL,
+    image_path varchar(255) NOT NULL
+);

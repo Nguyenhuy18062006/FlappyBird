@@ -14,7 +14,7 @@ public class Ground {
 
     private int speed;
 
-    public Ground(int x, int y) {
+    public Ground(int x, int y, Skin skin) {
         this.x = x;
         this.y = y;
         this.width = 960;
@@ -22,7 +22,7 @@ public class Ground {
 
         this.speed = 3;
 
-        image = new ImageIcon("resources/images/grounds/ground_spring.png").getImage();
+        image = new ImageIcon(skin.getImagePath()).getImage();
     }
 
     public void draw(Graphics g){

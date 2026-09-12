@@ -16,7 +16,7 @@ public class Bird {
     
     private Image image;
     
-    public Bird(int x, int y){
+    public Bird(int x, int y, Skin skin){
         this.x = x;
         this.y = y;
         
@@ -26,7 +26,7 @@ public class Bird {
         this.velocityY = 0;
         this.gravity = 0.5;
 
-        image = new ImageIcon("resources/images/birds/pixel_skin1_yellow.png").getImage();
+        image = new ImageIcon(skin.getImagePath()).getImage();
     }
     
     public void draw(Graphics g){
