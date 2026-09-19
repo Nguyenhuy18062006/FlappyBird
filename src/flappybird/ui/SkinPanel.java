@@ -1,4 +1,5 @@
 package flappybird.ui;
-public class LoginFrame {
+
+public class SkinPanel {
     
 }

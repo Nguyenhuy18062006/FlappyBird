@@ -44,15 +44,15 @@ public class Game {
 
     public Game(){
         SkinManager skinManager = new SkinManager();
-        selectedBirdSkin = skinManager.getBirdSkins().get(2);
-        selectedPipeSkin = skinManager.getPipeSkins().get(2);
-        selectedGroundSkin = skinManager.getGroundSkins().get(2);
-        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(2);
+        selectedBirdSkin = skinManager.getBirdSkins().get(1);
+        selectedPipeSkin = skinManager.getPipeSkins().get(1);
+        selectedGroundSkin = skinManager.getGroundSkins().get(1);
+        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(1);
         initializeGame();
 
         soundManager = new SoundManager();//âm thanh không phải trạng thái của 1 ván game không cần tạo lại
 
-        state = GameState.READY;
+        state = GameState.MENU;
     }
 
     public void drawPipes(Graphics g){
@@ -61,7 +61,36 @@ public class Game {
         }
     }
 
+    public void updateBackGround(){
+        // Background luôn chạy
+        background1.update();
+        background2.update();
+        ground1.update();
+        ground2.update();
+
+        // Loop background
+        if(background1.getX() <= -960){
+            background1.setX(background2.getX() + 960);
+        }
+
+        if(background2.getX() <= -960){
+            background2.setX(background1.getX() + 960);
+        }
+        if(ground1.getX() <= -960){
+            ground1.setX(ground2.getX() + 960);
+        }
+
+        if(ground2.getX() <= -960){
+            ground2.setX(ground1.getX() + 960);
+        }
+    }
+
     public void update(){
+        if(state == GameState.MENU){
+            updateBackGround();
+            return;
+        }
+
         if(state == GameState.STARTING){  
             background1.update();
             background2.update();
@@ -88,33 +117,11 @@ public class Game {
 
             if (pipes.get(0).isOffScreen()) {
                 pipes.remove(0);
-
                 PipePair lastPipe = pipes.get(pipes.size() - 1); 
-
                 pipes.add(new PipePair(lastPipe.getX() + 400, selectedPipeSkin));
             }
 
-            background1.update();
-            background2.update();
-
-            ground1.update();
-            ground2.update();
-
-            if(background1.getX() <= - 960){
-                background1.setX(background2.getX() + 960);
-            }
-            //Nếu x của background1 bé hơn hoặc bằng -960 thì thực hiện code bên trong.
-            if(background2.getX() <= -960){
-                background2.setX(background1.getX() + 960);
-            }
-
-            if(ground1.getX() <= -960){
-                ground1.setX(ground2.getX() + 960);
-            }
-
-            if(ground2.getX() <= -960){
-                ground2.setX(ground1.getX() + 960);
-            }
+            updateBackGround();
 
             for(PipePair pipe : pipes){
                 if(pipe.isColliding(bird.getBounds())){ //Kiểm tra có đụng không
@@ -138,7 +145,6 @@ public class Game {
 
     public void resetGame(){
         initializeGame();
-
         state = GameState.READY;
     }
 
@@ -191,5 +197,8 @@ public class Game {
 
     public int getScore(){
         return score;
+    }
+    public void playClickSound(){
+        soundManager.playJump();
     }
 }

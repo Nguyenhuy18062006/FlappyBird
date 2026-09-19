@@ -13,14 +13,14 @@ public class Main {
         //Đặt tên cho cửa sổ
         
         frame.setSize(860, 540);
-        //Kích thước tính bằng pixel 
+        //Kích thước tính bằng pixel
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //(Dòng này rất quan trọng) Nếu không có khi bấm X để tắt cửa sổ thì chương trình vẫn chạy ngầm
         //Còn có thì chương trình sẽ kết thúc.
         
         frame.setLocationRelativeTo(null);
-        //Đặt cửa sổ xuất hiện ở giữa màn hình 
+        //Đặt cửa sổ xuất hiện ở giữa màn hình.
         
         GamePanel gamePanel = new GamePanel();
         frame.add(gamePanel);

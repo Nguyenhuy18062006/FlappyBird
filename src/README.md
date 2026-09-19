@@ -91,9 +91,12 @@ FlappyBird/
 │       │   └── Score.java
 │       │
 │       └── ui/
-│           ├── LoginFrame.java
-│           ├── RegisterFrame.java
-│           └── MenuFrame.java
+│           ├── LoginPanel.java
+│           ├── SkinPanel.java
+│           ├── RankingPanel.java
+│           ├── GameOverPanel.java
+│           ├── RegisterPanel.java
+│           └── MenuPanel.java
 │
 ├── resources/
 │   ├── images/
@@ -119,9 +122,9 @@ FlappyBird/
 ```text
 users
 ├── id
-├── username
+├── user_name
 ├── password
-└── created_at
+└── hightest_score
 
 skins
 ├── id

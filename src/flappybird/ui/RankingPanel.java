@@ -1,5 +1,5 @@
 package flappybird.ui;
 
-public class RegisterFrame {
+public class RankingPanel {
     
 }
