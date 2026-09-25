@@ -3,35 +3,61 @@ package flappybird.game;
 import flappybird.ui.GameOverPanel;
 import flappybird.ui.MenuPanel;
 import flappybird.ui.PausePanel;
+import flappybird.ui.RankingPanel;
+import flappybird.ui.SkinPanel;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements KeyListener, MouseListener{
     private Game game;
     private Timer timer;
-    private float hue = 0.0f;
+
+    private JScrollPane rankingJScrollPane;
     
     private MenuPanel menuPanel;
     private GameOverPanel gameOverPanel;
     private PausePanel pausePanel;
+    private RankingPanel rankingPanel;
+    private SkinPanel skinPanel;
 
     public GamePanel() {
 
         game = new Game();
 
+        skinPanel = new SkinPanel(game.getSkinManager());
         menuPanel = new MenuPanel();
         gameOverPanel = new GameOverPanel();
         pausePanel = new PausePanel();
+        rankingPanel = new RankingPanel();
+
+        //Dùng null layout để tự đặt vị trí JScrollPane.
+        // Vì GamePanel đang tự vẽ giao diện bằng Graphics.
+        setLayout(null);
 
         setFocusable(true);
         addKeyListener(this);
         addMouseListener(this);
+
+        addMouseWheelListener(e -> {
+            if (game.getState() == GameState.SKINS) {
+                skinPanel.scroll(e.getWheelRotation() * 30);
+                repaint();
+            }
+        });
+
+        //Không tạo nó trong paintComponent().
+        rankingJScrollPane = rankingPanel.createRankingScrollPane();
+        //Add vào GamePanel nhưng ẩn lúc đầu.
+        add(rankingJScrollPane);
+        rankingJScrollPane.setVisible(false);
 
         timer = new Timer(16, e ->{ //Timer(khoảng thời gian,việc cần thực hiện);  -> là cú pháp của lambda expression nhận e thực hiện lệnh bên phải
             game.update();
@@ -67,6 +93,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             game.getGround2().draw(g);
             pausePanel.drawPause(g, getWidth(), getHeight(), game.getScore());
         }
+        else if (game.getState() == GameState.RANKING){
+            game.getGround1().draw(g);
+            game.getGround2().draw(g);
+            rankingPanel.drawRanking(g, getWidth(), getHeight());
+            rankingPanel.drawBackButton(g,getWidth(),getHeight());
+
+            updateRankingScrollPaneBounds();
+        }
+        else if (game.getState() == GameState.SKINS) {
+            skinPanel.drawSkinPanel((Graphics2D) g, getWidth(), getHeight());
+        }
         else{
             drawGame(g);
             game.getGround1().draw(g);
@@ -83,6 +120,51 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         g.drawString("Score: " + game.getScore(), 20, 30);
     }
 
+    // Đặt vị trí và kích thước JScrollPane.
+    private void updateRankingScrollPaneBounds() {
+
+        if (rankingJScrollPane == null) {
+            return;
+        }
+        int menuWidth = rankingPanel.getMenuWidth();
+        int menuHeight = rankingPanel.getMenuHeight();
+
+        int menuX = (getWidth() - menuWidth) / 2;
+        int menuY = (getHeight() - menuHeight) / 2;
+
+        
+        //JScrollPane nằm ở giữa khung Ranking.
+        // menuY + 70:
+        //    bắt đầu bên dưới title.
+
+        // 500 x 280:
+        //  vùng hiển thị danh sách.
+        rankingJScrollPane.setBounds(menuX + 50, menuY + 70, 500, 280);
+    }
+
+    /*
+     * Hiện JScrollPane khi vào Ranking.
+     */
+    private void showRankingScrollPane() {
+
+        rankingJScrollPane.setVisible(true);
+
+        updateRankingScrollPaneBounds();
+
+        revalidate();
+        repaint();
+    }
+
+    /*
+     * Ẩn JScrollPane khi rời Ranking.
+     */
+    private void hideRankingScrollPane() {
+
+        rankingJScrollPane.setVisible(false);
+
+        revalidate();
+        repaint();
+    }
 
     @Override
     public void keyPressed(KeyEvent e){
@@ -132,6 +214,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             }
             else if (button.equals("RANKING")) {
                 game.setState(GameState.RANKING);
+                showRankingScrollPane();
                 System.out.println(game.getState());
             }
             else if (button.equals("LOGIN")) {
@@ -171,7 +254,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             }
             game.playClickSound();
 
-            if(button.equals("PLAY_AGAIN")){
+            if (button.equals("PLAY_AGAIN")){
                 game.resetGame();
             }
             else if(button.equals("MAIN_MENU")){
@@ -184,6 +267,48 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             return;
         }
 
+        if(game.getState() == GameState.RANKING){
+            String button = rankingPanel.getClickedRanking(e.getX(), e.getY(), getWidth(), getHeight());
+            if(button == null){
+                return;
+            }
+            game.playClickSound();
+
+            if (button.equals("MAIN_MENU")){
+                hideRankingScrollPane();
+                game.setState(GameState.MENU);
+            }
+
+            return;
+        }
+        if (game.getState() == GameState.SKINS) {
+        // CATEGORY
+        String category = skinPanel.getClickedCategory(e.getX(), e.getY(), getWidth(), getHeight());
+
+        if (category != null) {
+            skinPanel.setSelectedCategory(category);
+            game.playClickSound();
+            repaint();
+            return;
+        }
+        // SKIN
+        Skin clickedSkin = skinPanel.getClickedSkin(e.getX(), e.getY(), getWidth(), getHeight());
+
+        if (clickedSkin != null) {
+            game.selectSkin(clickedSkin);
+            skinPanel.setSelectedSkin(clickedSkin);
+            game.playClickSound();
+            repaint();
+            return;
+        }
+        // BACK
+        if (skinPanel.isBackClicked(e.getX(), e.getY(), getWidth(), getHeight())) {
+            game.setState(GameState.MENU);
+            game.playClickSound();
+            repaint();
+            return;
+        }
+    }
         game.jump();
     }
 

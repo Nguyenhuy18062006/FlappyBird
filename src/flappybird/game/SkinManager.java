@@ -20,7 +20,7 @@ public class SkinManager {
 
     private void loadSkins(){
         // Brid skins
-        birdSkins.add(new Skin(1, "Yellow", "BRID", "resources/images/birds/pixel_skin1_yellow.png"));
+        birdSkins.add(new Skin(1, "Yellow", "BIRD", "resources/images/birds/pixel_skin1_yellow.png"));
         birdSkins.add(new Skin(2,"Blue", "BIRD", "resources/images/birds/pixel_skin2_blue.png"));
         birdSkins.add(new Skin(3,"Red","BIRD","resources/images/birds/pixel_skin3_red.png"));
         birdSkins.add(new Skin(4,"Pink","BIRD","resources/images/birds/pixel_skin4_pink.png"));

@@ -19,6 +19,8 @@ public class Game {
 
     private int score;
 
+    private SkinManager skinManager;
+
     private Skin selectedBirdSkin;
     private Skin selectedPipeSkin;
     private Skin selectedBackgroundSkin;
@@ -43,11 +45,11 @@ public class Game {
     }
 
     public Game(){
-        SkinManager skinManager = new SkinManager();
-        selectedBirdSkin = skinManager.getBirdSkins().get(1);
-        selectedPipeSkin = skinManager.getPipeSkins().get(1);
-        selectedGroundSkin = skinManager.getGroundSkins().get(1);
-        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(1);
+        skinManager = new SkinManager();
+        selectedBirdSkin = skinManager.getBirdSkins().get(2);
+        selectedPipeSkin = skinManager.getPipeSkins().get(2);
+        selectedGroundSkin = skinManager.getGroundSkins().get(2);
+        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(2);
         initializeGame();
 
         soundManager = new SoundManager();//âm thanh không phải trạng thái của 1 ván game không cần tạo lại
@@ -86,7 +88,13 @@ public class Game {
     }
 
     public void update(){
-        if(state == GameState.MENU){
+        if(state == GameState.MENU ||
+        state == GameState.RANKING ||
+        state == GameState.SKINS ||
+        state == GameState.LOGIN ||
+        state == GameState.REGISTER ||
+        state == GameState.GAME_OVER ||
+        state == GameState.PAUSE){
             updateBackGround();
             return;
         }
@@ -200,5 +208,30 @@ public class Game {
     }
     public void playClickSound(){
         soundManager.playJump();
+    }
+
+    public SkinManager getSkinManager() {
+        return skinManager;
+    }
+
+    public void selectSkin(Skin skin){
+        if(skin == null){
+            return;
+        }
+
+        switch(skin.getSkinType()){
+            case "BIRD":
+                selectedBirdSkin = skin;
+                break;
+            case "PIPE":
+                selectedPipeSkin = skin;
+                break;
+            case "GROUND": 
+                selectedGroundSkin = skin;
+                break;
+            case "BACKGROUND":
+                selectedBackgroundSkin = skin;
+                break;
+        }
     }
 }
