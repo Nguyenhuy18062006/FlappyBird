@@ -1,13 +1,17 @@
 package flappybird.game;
 
 import flappybird.ui.GameOverPanel;
+import flappybird.ui.LoginPanel;
 import flappybird.ui.MenuPanel;
 import flappybird.ui.PausePanel;
 import flappybird.ui.RankingPanel;
+import flappybird.ui.RegisterPanel;
 import flappybird.ui.SkinPanel;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -28,6 +32,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
     private RankingPanel rankingPanel;
     private SkinPanel skinPanel;
 
+    private LoginPanel loginPanel;
+    private RegisterPanel registerPanel;
+
     public GamePanel() {
 
         game = new Game();
@@ -38,9 +45,65 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         pausePanel = new PausePanel();
         rankingPanel = new RankingPanel();
 
+        loginPanel = new LoginPanel();
+        registerPanel = new RegisterPanel();
+
         //Dùng null layout để tự đặt vị trí JScrollPane.
         // Vì GamePanel đang tự vẽ giao diện bằng Graphics.
         setLayout(null);
+
+        add(loginPanel);
+        add(registerPanel);
+
+        loginPanel.setVisible(false);
+        registerPanel.setVisible(false);
+
+        updateAuthPanelBounds();
+
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateAuthPanelBounds();
+            }
+        });
+
+        loginPanel.getRegisterButton().addActionListener(e -> {
+        game.setState(GameState.REGISTER);
+
+        loginPanel.setVisible(false);
+        registerPanel.setVisible(true);
+
+        repaint();
+        });
+
+        loginPanel.getBackButton().addActionListener(e -> {
+            game.setState(GameState.MENU);
+
+            loginPanel.setVisible(false);
+
+            repaint();
+            requestFocusInWindow();
+        });
+
+        registerPanel.getLoginButton().addActionListener(e -> {
+            game.setState(GameState.LOGIN);
+
+            registerPanel.setVisible(false);
+            loginPanel.setVisible(true);
+
+            repaint();
+        });
+
+        registerPanel.getBackButton().addActionListener(e -> {
+            game.setState(GameState.MENU);
+
+            registerPanel.setVisible(false);
+
+            repaint();
+            requestFocusInWindow();
+        });
+
 
         setFocusable(true);
         addKeyListener(this);
@@ -69,6 +132,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         requestFocusInWindow();
     }
 
+    private void updateAuthPanelBounds() {
+        int panelWidth = 320;
+        int panelHeight = 380;
+
+        int x = (getWidth() - panelWidth) / 2;
+        int y = (getHeight() - panelHeight) / 2 - 35;
+
+        loginPanel.setBounds(x, y, panelWidth, panelHeight);
+        registerPanel.setBounds(x, y, panelWidth, panelHeight);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -78,7 +152,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
         // Kiểm tra trạng thái
         if(game.getState() == GameState.MENU){//=> tức là Game mới là thằng quản lý trạng thái, còn GamePanel chỉ nhìn trạng thái đó để quyết định vẽ cái gì.
-            menuPanel.drawMenu(g, getWidth(), getHeight());
+            menuPanel.drawMenu(g, getWidth(), getHeight(), game.isLoggedIn());
 
             game.getGround1().draw(g);
             game.getGround2().draw(g);
@@ -103,6 +177,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         }
         else if (game.getState() == GameState.SKINS) {
             skinPanel.drawSkinPanel((Graphics2D) g, getWidth(), getHeight());
+        }
+        else if (
+                game.getState() == GameState.LOGIN
+                || game.getState() == GameState.REGISTER
+        ) {
+
+            // Không vẽ game ở đây.
+            // LoginPanel / RegisterPanel sẽ tự hiển thị
+            // vì chúng là JPanel con của GamePanel.
         }
         else{
             drawGame(g);
@@ -194,7 +277,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         }
         //MENU
         if(game.getState() == GameState.MENU){
-            String button = menuPanel.getClickedButton( e.getX(), e.getY(), getWidth(), getHeight());
+            String button = menuPanel.getClickedButton( e.getX(), e.getY(), getWidth(), getHeight(), game.isLoggedIn());
 
             if (button == null){
                 return;
@@ -219,15 +302,24 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             }
             else if (button.equals("LOGIN")) {
                 game.setState(GameState.LOGIN);
+                loginPanel.setVisible(true);
+                registerPanel.setVisible(false);
+                loginPanel.requestFocusInWindow();
+                repaint();
                 System.out.println(game.getState());
             }
             else if (button.equals("REGISTER")) {
                 game.setState(GameState.REGISTER);
+                loginPanel.setVisible(false);
+                registerPanel.setVisible(true);
+                registerPanel.requestFocusInWindow();
+                repaint();
                 System.out.println(game.getState());
             }
             else if (button.equals("EXIT")) {
                 System.exit(0);
             }
+            
             return;
         }
         if (game.getState() == GameState.GAME_OVER){

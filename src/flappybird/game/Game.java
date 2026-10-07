@@ -1,5 +1,6 @@
 package flappybird.game;
 
+import flappybird.model.User;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class Game {
     private long startTime;
 
     private int score;
+
+    private User currentUser;
 
     private SkinManager skinManager;
 
@@ -46,10 +49,10 @@ public class Game {
 
     public Game(){
         skinManager = new SkinManager();
-        selectedBirdSkin = skinManager.getBirdSkins().get(2);
-        selectedPipeSkin = skinManager.getPipeSkins().get(2);
-        selectedGroundSkin = skinManager.getGroundSkins().get(2);
-        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(2);
+        selectedBirdSkin = skinManager.getBirdSkins().get(0);
+        selectedPipeSkin = skinManager.getPipeSkins().get(0);
+        selectedGroundSkin = skinManager.getGroundSkins().get(0);
+        selectedBackgroundSkin = skinManager.getBackgroundSkins().get(0);
         initializeGame();
 
         soundManager = new SoundManager();//âm thanh không phải trạng thái của 1 ván game không cần tạo lại
@@ -233,5 +236,9 @@ public class Game {
                 selectedBackgroundSkin = skin;
                 break;
         }
+    }
+
+    public boolean isLoggedIn() {
+        return currentUser != null;
     }
 }

@@ -1,6 +1,47 @@
 package flappybird.model;
 
-
 public class Skin {
-    
+    private int id;
+    private String skinName;
+    private String skinType;
+    private String imagePath;
+
+    public Skin(int id, String skinName, String skinType, String imagepath){
+        this.id = id;
+        this.skinName = skinName;
+        this.skinType = skinType;
+        this.imagePath = imagepath;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getSkinName() {
+        return skinName;
+    }
+
+    public void setSkinName(String skinName) {
+        this.skinName = skinName;
+    }
+
+    public String getSkinType() {
+        return skinType;
+    }
+
+    public void setSkinType(String skinType) {
+        this.skinType = skinType;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

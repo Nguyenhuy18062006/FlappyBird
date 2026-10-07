@@ -35,7 +35,7 @@ public class MenuPanel {
         g2.drawString(text, textX, textY);
     }
 
-    public String getClickedButton(int mouseX, int mouseY, int panelWidth, int panelHeight){
+    public String getClickedButton(int mouseX, int mouseY, int panelWidth, int panelHeight, boolean loggedIn){
         int menuWidth = 320;
         int menuHeight = 380;
 
@@ -49,7 +49,25 @@ public class MenuPanel {
         int buttonX = menuX + (menuWidth - buttonWidth) / 2;
         int startY = menuY + 100;
 
-        String[] buttons = {"PLAY", "SKINS", "RANKING", "LOGIN", "REGISTER", "EXIT"};
+        String[] buttons;
+        if (loggedIn) {
+            buttons = new String[]{
+                "PLAY",
+                "SKINS",
+                "RANKING",
+                "LOGOUT",
+                "EXIT"
+            };
+        } else {
+            buttons = new String[]{
+                "PLAY",
+                "SKINS",
+                "RANKING",
+                "LOGIN",
+                "REGISTER",
+                "EXIT"
+            };
+        }
         //các nút khi click
 
         for(int i = 0; i < buttons.length; i++){
@@ -65,7 +83,7 @@ public class MenuPanel {
 
     
 
-    public void drawMenu(Graphics g, int panelWidth, int panelHeight) {
+    public void drawMenu(Graphics g, int panelWidth, int panelHeight, boolean loggedIn) {
 
         // Graphics2D có thêm nhiều chức năng vẽ so với Graphics
         Graphics2D g2 = (Graphics2D) g;
@@ -122,11 +140,20 @@ public class MenuPanel {
 
         int startY = menuY + 100;
 
-        drawButton(g2, "PLAY", buttonX, startY,buttonWidth, buttonHeight);
-        drawButton(g2, "SKINS", buttonX, startY + (buttonHeight + gap), buttonWidth, buttonHeight);
-        drawButton(g2, "RANKING", buttonX, startY + 2 * (buttonHeight + gap), buttonWidth, buttonHeight);
-        drawButton(g2, "LOGIN", buttonX, startY + 3 * (buttonHeight + gap), buttonWidth, buttonHeight);
-        drawButton(g2, "REGISTER", buttonX, startY + 4 * (buttonHeight + gap), buttonWidth, buttonHeight);
-        drawButton(g2, "EXIT", buttonX, startY + 5 * (buttonHeight + gap), buttonWidth, buttonHeight);
+        if (!loggedIn) { 
+            drawButton( g2, "PLAY", buttonX, startY, buttonWidth, buttonHeight ); 
+            drawButton( g2, "SKINS", buttonX, startY + 1 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "RANKING", buttonX, startY + 2 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "LOGIN", buttonX, startY + 3 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "REGISTER", buttonX, startY + 4 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "EXIT", buttonX, startY + 5 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+        } 
+        else { 
+            drawButton( g2, "PLAY", buttonX, startY, buttonWidth, buttonHeight ); 
+            drawButton( g2, "SKINS", buttonX, startY + 1 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "RANKING", buttonX, startY + 2 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "LOGOUT", buttonX, startY + 3 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
+            drawButton( g2, "EXIT", buttonX, startY + 4 * (buttonHeight + gap), buttonWidth, buttonHeight );
+        }
     }
 }
