@@ -1,12 +1,5 @@
 package flappybird.game;
 
-import flappybird.ui.GameOverPanel;
-import flappybird.ui.LoginPanel;
-import flappybird.ui.MenuPanel;
-import flappybird.ui.PausePanel;
-import flappybird.ui.RankingPanel;
-import flappybird.ui.RegisterPanel;
-import flappybird.ui.SkinPanel;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,9 +9,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
+
+import flappybird.ui.GameOverPanel;
+import flappybird.ui.LoginPanel;
+import flappybird.ui.MenuPanel;
+import flappybird.ui.PausePanel;
+import flappybird.ui.RankingPanel;
+import flappybird.ui.RegisterPanel;
+import flappybird.ui.SkinPanel;
 
 public class GamePanel extends JPanel implements KeyListener, MouseListener{
     private Game game;
@@ -86,6 +88,28 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             requestFocusInWindow();
         });
 
+        loginPanel.getLoginButton().addActionListener(e ->{
+            String username = loginPanel.getUsername();
+            String password = loginPanel.getPassword();
+
+            boolean success = game.login(username, password);
+
+            if(success) {
+                System.out.println("Đăng nhập thành công!");
+
+                game.setState(GameState.MENU);
+
+                loginPanel.setVisible(false);
+
+                repaint();
+
+                requestFocusInWindow();
+            }
+            else{
+                System.out.println("Sai username hoặc password!");
+            }
+        });
+
         registerPanel.getLoginButton().addActionListener(e -> {
             game.setState(GameState.LOGIN);
 
@@ -93,6 +117,37 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             loginPanel.setVisible(true);
 
             repaint();
+        });
+
+        registerPanel.getRegisterButton().addActionListener(e ->{
+            String username = registerPanel.getUsername();
+            String password = registerPanel.getPassword();
+            String comfirmPassword = registerPanel.getConfirmPassword();
+
+            if(username.isBlank() || password.isBlank() || comfirmPassword.isBlank()){
+                System.out.println("Vui lòng nhập đầy đủ thông tin");
+                return;
+            }
+
+            if(!password.equals(comfirmPassword)){
+                System.out.println("Mật khẩu xác nhận không khớp");
+                return;
+            }
+
+            boolean success = game.register(username, password);
+
+            if(success) {
+                System.out.println("Đăng ký thành công!");
+
+                game.setState(GameState.LOGIN);
+                registerPanel.setVisible(false);
+                loginPanel.setVisible(true);
+
+                repaint();
+                requestFocusInWindow();
+            }else{
+                System.out.println("Đăng ký thất bại: tài khoản đã tồn tại hoặc có lỗi database");
+            }
         });
 
         registerPanel.getBackButton().addActionListener(e -> {

@@ -33,3 +33,14 @@ CREATE TABLE SKINS(
     skin_type VARCHAR(50) NOT NULL,
     image_path varchar(255) NOT NULL
 );
+
+CREATE DATABASE IF NOT EXISTS `FlappyBird`;
+
+-- 2. Tạo tài khoản MySQL riêng cho dự án này
+CREATE USER 'FlappyBird'@'localhost' IDENTIFIED BY 'flappybird123';
+
+-- 3. CHỈ CẤP QUYỀN trên đúng Database của dự án này (An toàn cho dự án)
+GRANT ALL PRIVILEGES ON `FlappyBird`.* TO 'FlappyBird'@'localhost';
+
+-- 4. Áp dụng thay đổi
+FLUSH PRIVILEGES;

@@ -1,9 +1,12 @@
 package flappybird.game;
 
-import flappybird.model.User;
 import java.awt.Graphics;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import flappybird.model.User;
+import flappybird.service.UserService;
 
 public class Game {
     private Bird bird;
@@ -21,6 +24,7 @@ public class Game {
     private int score;
 
     private User currentUser;
+    private final UserService userService;
 
     private SkinManager skinManager;
 
@@ -48,6 +52,8 @@ public class Game {
     }
 
     public Game(){
+        userService = new UserService();
+
         skinManager = new SkinManager();
         selectedBirdSkin = skinManager.getBirdSkins().get(0);
         selectedPipeSkin = skinManager.getPipeSkins().get(0);
@@ -240,5 +246,39 @@ public class Game {
 
     public boolean isLoggedIn() {
         return currentUser != null;
+    }
+
+    public boolean login(String userName, String password){
+        try {
+            User user = userService.login(userName, password);
+
+            if(user != null){
+                currentUser = user;
+                return true;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean register(String userName, String password){
+        try {
+            if(userService.getUserByUserName(userName) != null){
+                return false;
+            }
+
+            User user = new User(0,userName, password, 0);
+            user.setUserName(userName);
+            user.setPassword(password);
+            user.setHighestScore(0);
+
+            userService.createUser(user);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

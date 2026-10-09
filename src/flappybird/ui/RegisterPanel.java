@@ -1,7 +1,17 @@
 package flappybird.ui;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class RegisterPanel extends JPanel {
 
@@ -86,27 +96,13 @@ public class RegisterPanel extends JPanel {
         // ================= WHITE PANEL =================
         g2.setColor(new Color(255, 255, 255, 220));
 
-        g2.fillRoundRect(
-                0,
-                0,
-                320,
-                380,
-                20,
-                20
-        );
+        g2.fillRoundRect( 0,0,320,380,20,20);
 
         // ================= BORDER =================
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(2));
 
-        g2.drawRoundRect(
-                0,
-                0,
-                320,
-                380,
-                20,
-                20
-        );
+        g2.drawRoundRect( 0,0,320,380,20,20);
 
         g2.dispose();
     }

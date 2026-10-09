@@ -23,6 +23,7 @@ public class LoginPanel extends JPanel {
     private JButton backButton;
 
     public LoginPanel() {
+
         setLayout(null);
         setOpaque(false);
 
