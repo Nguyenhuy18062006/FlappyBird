@@ -54,9 +54,8 @@ public class SkinDAO {
         try(Connection connection = DatabaseConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)){
             try(ResultSet resultSet = statement.executeQuery()){
-                if(resultSet.next()){
+                while(resultSet.next()){
                     Skin skin = new Skin(resultSet.getInt("id"), resultSet.getString("skin_name"), resultSet.getString("skin_type"), resultSet.getString("image_path"));
-                    
                     skins.add(skin);
                 }
             }

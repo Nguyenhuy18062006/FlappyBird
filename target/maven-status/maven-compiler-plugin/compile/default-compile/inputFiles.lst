@@ -17,6 +17,9 @@ C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\M
 C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\model\Score.java
 C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\model\Skin.java
 C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\model\User.java
+C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\service\ScoreService.java
+C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\service\SkinService.java
+C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\service\UserService.java
 C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\ui\GameOverPanel.java
 C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\ui\LoginPanel.java
 C:\Users\Nguyen Quang Huy\Documents\NetBeansProjects\FlappyBird\src\flappybird\ui\MenuPanel.java

@@ -1,9 +1,18 @@
 package flappybird.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import flappybird.model.User;
+import flappybird.service.UserService;
 
 public class RankingPanel {
 
@@ -14,6 +23,9 @@ public class RankingPanel {
     private int buttonHeight = 40;
 
     MenuPanel menuPanel = new MenuPanel();
+    private final UserService userService = new UserService();
+
+    private DefaultTableModel tableModel;
 
     public String getClickedRanking(int mouseX, int mouseY, int panelWidth, int panelHeight) {
 
@@ -80,87 +92,71 @@ public class RankingPanel {
     }
 
     public JScrollPane createRankingScrollPane() {
-        String[] columns = {
-            "RANK",
-            "PLAYER",
-            "SCORE"
+
+        String[] columns = {"RANK", "PLAYER", "SCORE"};
+
+        tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
 
-        DefaultTableModel model = new DefaultTableModel(columns, 0);
-
-        String[] players = {
-            "Huy",
-            "Nam",
-            "Minh",
-            "An",
-            "Tùng",
-            "Long",
-            "Đức",
-            "Hoàng",
-            "Duy",
-            "Khoa",
-            "Tuấn",
-            "Phúc",
-            "Linh",
-            "Quân",
-            "Thắng",
-            "Dũng",
-            "Sơn",
-            "Khang",
-            "Bình",
-            "Anh"
-        };
-
-        int[] scores = {
-            100,
-            95,
-            90,
-            88,
-            85,
-            80,
-            78,
-            75,
-            72,
-            70,
-            68,
-            65,
-            63,
-            60,
-            58,
-            55,
-            52,
-            50,
-            48,
-            45
-        };
-
-        for (int i = 0; i < players.length; i++) {
-            model.addRow(new Object[]{
-                i + 1,
-                players[i],
-                scores[i]
-            });
-        }
-
-        JTable table = new JTable(model);
-
+        JTable table = new JTable(tableModel);
         table.setFont(new Font("Arial", Font.PLAIN, 15));
-        table.setRowHeight(25);
+        table.setRowHeight(28);
+        table.setFillsViewportHeight(true);
 
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 15));
+        table.getTableHeader().setFont(
+                new Font("Arial", Font.BOLD, 15));
 
         table.getColumnModel().getColumn(0).setPreferredWidth(80);
-
         table.getColumnModel().getColumn(1).setPreferredWidth(250);
-
         table.getColumnModel().getColumn(2).setPreferredWidth(100);
-
-        // Không cho sửa dữ liệu trong bảng
-        table.setEnabled(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
 
+        // Ban đầu hiển thị trạng thái chờ tải dữ liệu.
+        tableModel.addRow(
+                new Object[]{"-", "Đang tải dữ liệu...", "-"});
+
         return scrollPane;
+    }
+
+    public void refreshRanking() {
+
+        if (tableModel == null) {
+            return;
+        }
+
+        tableModel.setRowCount(0);
+
+        try {
+            List<User> users = userService.getTopUsers();
+
+            if (users.isEmpty()) {
+                tableModel.addRow(
+                        new Object[]{"-", "Chưa có người chơi", "-"});
+                return;
+            }
+
+            int rank = 1;
+
+            for (User user : users) {
+                tableModel.addRow(new Object[]{
+                    rank++,
+                    user.getUserName(),
+                    user.getHighestScore()
+                });
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            tableModel.setRowCount(0);
+            tableModel.addRow(
+                    new Object[]{"!", "Không tải được dữ liệu", "-"});
+        }
     }
 
     public int getMenuWidth() {

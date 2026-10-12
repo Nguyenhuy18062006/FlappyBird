@@ -113,4 +113,24 @@ public class UserDAO {
             statement.executeUpdate();
         }
     }
+
+    public List<User> getTopUsers() throws SQLException{
+        List<User> users = new ArrayList<>();
+
+        String sql = """
+                SELECT id, user_name, highest_score FROM USERS
+                ORDER BY highest_score DESC, user_name ASC LIMIT 20;
+                """;
+        try(Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                while(resultSet.next()){
+                    User user = new User(resultSet.getInt("id"), resultSet.getNString("user_name"), "", resultSet.getInt("highest_score"));
+                    users.add(user);
+                }
+            }
+        }
+        return users;
+    }
 }

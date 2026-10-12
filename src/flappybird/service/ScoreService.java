@@ -5,6 +5,7 @@ import java.util.List;
 
 import flappybird.database.ScoreDAO;
 import flappybird.model.Score;
+import flappybird.model.User;
 
 public class ScoreService {
     private final ScoreDAO scoreDAO;
@@ -31,5 +32,9 @@ public class ScoreService {
 
     public void deleteScore(int scoreId) throws SQLException{
         scoreDAO.deleteScore(scoreId);
+    }
+
+    public List<User> getTopScores() throws SQLException{
+        return scoreDAO.getTopScores();
     }
 }

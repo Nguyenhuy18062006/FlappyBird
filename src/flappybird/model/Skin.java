@@ -5,12 +5,16 @@ public class Skin {
     private String skinName;
     private String skinType;
     private String imagePath;
+    private int unlockScore;
+    private boolean active;
 
-    public Skin(int id, String skinName, String skinType, String imagepath){
+    public Skin(int id, String skinName, String skinType, String imagepath, int unlockScore, boolean  active){
         this.id = id;
         this.skinName = skinName;
         this.skinType = skinType;
         this.imagePath = imagepath;
+        this.unlockScore = unlockScore;
+        this.active = active;
     }
 
     public int getId() {
@@ -43,5 +47,21 @@ public class Skin {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public void setUnlockScore(int unlockScore) {
+        this.unlockScore = unlockScore;
+    }
+
+    public int getUnlockScore() {
+        return unlockScore;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

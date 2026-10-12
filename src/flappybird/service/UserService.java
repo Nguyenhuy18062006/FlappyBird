@@ -50,4 +50,8 @@ public class UserService {
 
         return user;
     }
+
+    public List<User> getTopUsers() throws SQLException{
+        return userDAO.getTopUsers();
+    }
 }

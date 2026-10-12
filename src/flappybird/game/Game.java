@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import flappybird.model.Score;
 import flappybird.model.User;
+import flappybird.service.ScoreService;
 import flappybird.service.UserService;
 
 public class Game {
@@ -25,6 +27,7 @@ public class Game {
 
     private User currentUser;
     private final UserService userService;
+    private final ScoreService scoreService;
 
     private SkinManager skinManager;
 
@@ -53,6 +56,7 @@ public class Game {
 
     public Game(){
         userService = new UserService();
+        scoreService = new ScoreService();
 
         skinManager = new SkinManager();
         selectedBirdSkin = skinManager.getBirdSkins().get(0);
@@ -142,19 +146,22 @@ public class Game {
 
             for(PipePair pipe : pipes){
                 if(pipe.isColliding(bird.getBounds())){ //Kiểm tra có đụng không
-                    die(); //Tạo tiếng chết
-                    state = GameState.GAME_OVER; //True thì thực hiện lệnh này
+                    endGame(); // Gọi end game cho gọn và có các chức năng lưu điểm
+                    // die(); //Tạo tiếng chết
+                    // state = GameState.GAME_OVER; //True thì thực hiện lệnh này
                     return;
                 }
             }
             if(bird.getY() + bird.getHeight() >= 445){ //Nếu chim đi quá 445px y thì true
-                die(); //Tọa tiếng chết
-                state = GameState.GAME_OVER; //Đúng lệnh thực thi
+                endGame(); 
+                // die(); //Tọa tiếng chết
+                // state = GameState.GAME_OVER; //Đúng lệnh thực thi
                 return;
             }
             if(bird.getY() <= -200){
-                die();
-                state = GameState.GAME_OVER;
+                // die();
+                // state = GameState.GAME_OVER;
+                endGame();
                 return;
             }
         }
@@ -263,6 +270,11 @@ public class Game {
         return false;
     }
 
+    public void logout() {
+        currentUser = null;
+        state = GameState.MENU;
+    }
+
     public boolean register(String userName, String password){
         try {
             if(userService.getUserByUserName(userName) != null){
@@ -279,6 +291,36 @@ public class Game {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private void endGame(){
+        if(state == GameState.GAME_OVER){
+            return;
+        }
+
+        die();
+        state = GameState.GAME_OVER;
+
+        // Chỉ lưu điểm khi người chơi đã đăng nhập.
+        if (currentUser == null) {
+            return;
+        }
+
+        try {
+            Score newScore = new Score(0, currentUser.getId(), score, null);
+
+            // Lưu lịch sử điểm của ván vừa chơi.
+            scoreService.createScore(newScore);
+
+            // Cập nhật kỷ lục nếu điểm mới cao hơn.
+            if (score > currentUser.getHighestScore()) {
+                currentUser.setHighestScore(score);
+                userService.updateUser(currentUser);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import flappybird.model.Score;
+import flappybird.model.User;
 
 public class ScoreDAO {
     public void createScore(Score score) throws SQLException{
@@ -91,6 +92,27 @@ public class ScoreDAO {
             statement.setInt(1, scoreId);
 
             statement.executeUpdate();
+        }
+    }
+
+    public List<User> getTopScores() throws SQLException{
+        List<User> users = new ArrayList<>();
+
+        String sql = """
+                SELECT id, user_name, password, highest_score FROM USERS
+                ORDER BY highest_score DESC, user_name ASC LIMIT 20
+                """;
+
+        try(Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+            try(ResultSet resultSet = statement.executeQuery()){
+                while (resultSet.next()){
+                    User user = new User(resultSet.getInt("id"), resultSet.getString("user_name"), resultSet.getString("password"), resultSet.getInt("highest_score"));
+                    
+                    users.add(user);
+                }
+            }
+            return users;
         }
     }
 }

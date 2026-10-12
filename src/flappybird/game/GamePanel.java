@@ -36,10 +36,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
+    private GameState previousState;
 
     public GamePanel() {
 
         game = new Game();
+        previousState = game.getState();
 
         skinPanel = new SkinPanel(game.getSkinManager());
         menuPanel = new MenuPanel();
@@ -179,6 +181,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
         timer = new Timer(16, e ->{ //Timer(khoảng thời gian,việc cần thực hiện);  -> là cú pháp của lambda expression nhận e thực hiện lệnh bên phải
             game.update();
+            // Chỉ tải Top 3 một lần khi vừa chuyển sang GAME_OVER.
+            if (game.getState() == GameState.GAME_OVER
+                    && previousState != GameState.GAME_OVER) {
+                gameOverPanel.refreshTopScores();
+            }
+            previousState = game.getState();
             repaint();
         });
         //1 giây / 0.016 giây ≈ 62.5 lần
@@ -284,6 +292,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
      * Hiện JScrollPane khi vào Ranking.
      */
     private void showRankingScrollPane() {
+        rankingPanel.refreshRanking();
 
         rankingJScrollPane.setVisible(true);
 
@@ -362,6 +371,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
                 loginPanel.requestFocusInWindow();
                 repaint();
                 System.out.println(game.getState());
+            }
+            else if (button.equals("LOGOUT")) {
+                game.logout();
+                loginPanel.setVisible(false);
+                registerPanel.setVisible(false);
+                repaint();
+                requestFocusInWindow();
             }
             else if (button.equals("REGISTER")) {
                 game.setState(GameState.REGISTER);

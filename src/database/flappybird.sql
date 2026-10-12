@@ -6,7 +6,16 @@ CREATE TABLE USERS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_name VARCHAR(155) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    hightest_score INT NOT NULL DEFAULT 0
+    highest_score INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE SKINS(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    skin_name VARCHAR(100) NOT NULL,
+    skin_type VARCHAR(50) NOT NULL,
+    image_path varchar(255) NOT NULL,
+    unlock_score INT NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE SCORES(
@@ -27,11 +36,15 @@ CREATE TABLE USER_SKINS (
     FOREIGN KEY (skin_id) REFERENCES SKINS(id)
 );
 
-CREATE TABLE SKINS(
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    skin_name VARCHAR(100) NOT NULL,
+CREATE TABLE USER_EQUIPPED_SKIN(
+	user_id INT NOT NULL,
     skin_type VARCHAR(50) NOT NULL,
-    image_path varchar(255) NOT NULL
+    skin_id INT NOT NULL,
+
+    PRIMARY KEY (user_id, skin_type),
+
+    FOREIGN KEY (user_id) REFERENCES USERS(id),
+    FOREIGN KEY (skin_id) REFERENCES SKINS(id)
 );
 
 CREATE DATABASE IF NOT EXISTS `FlappyBird`;
