@@ -98,14 +98,7 @@ public class MenuPanel {
         // Khung Menu
         // 180 là độ trong suốt (Alpha)
         g2.setColor(new Color(255, 255, 255, 180));
-        g2.fillRoundRect(
-            menuX,
-            menuY,
-            menuWidth,
-            menuHeight,
-            20,
-            20
-        );
+        g2.fillRoundRect(menuX, menuY, menuWidth, menuHeight, 20, 20);
 
         // Tiêu đề
         g2.setFont(new Font("Arial", Font.BOLD, 30));
@@ -114,14 +107,13 @@ public class MenuPanel {
         int rgb = Color.HSBtoRGB(hue, 1.0f, 1.0f);
         g2.setColor(new Color(rgb));
 
-        String title = "FLAPPY BIRD";
+        String title = "Chim Đập Cánh";
 
         // FontMetrics dùng để lấy thông tin/kích thước của chữ
         FontMetrics fm = g2.getFontMetrics();
 
         // Lấy chiều rộng chữ để căn giữa
-        int titleX = menuX
-                + (menuWidth - fm.stringWidth(title)) / 2;
+        int titleX = menuX + (menuWidth - fm.stringWidth(title)) / 2;
         //Lấy chiều rộng menu - chiều rộng chữ rồi chia 2 → chữ nằm giữa menu.
 
         g2.drawString(title, titleX, menuY + 60);

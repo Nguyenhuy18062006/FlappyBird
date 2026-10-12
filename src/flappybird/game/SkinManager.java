@@ -1,7 +1,10 @@
 package flappybird.game;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import flappybird.service.SkinService;
 
 public class SkinManager {
     private List<Skin> birdSkins;
@@ -19,27 +22,48 @@ public class SkinManager {
     }
 
     private void loadSkins(){
-        // Brid skins
-        birdSkins.add(new Skin(1, "Yellow", "BIRD", "resources/images/birds/pixel_skin1_yellow.png"));
-        birdSkins.add(new Skin(2,"Blue", "BIRD", "resources/images/birds/pixel_skin2_blue.png"));
-        birdSkins.add(new Skin(3,"Red","BIRD","resources/images/birds/pixel_skin3_red.png"));
-        birdSkins.add(new Skin(4,"Pink","BIRD","resources/images/birds/pixel_skin4_pink.png"));
-        birdSkins.add(new Skin(5,"Green","BIRD","resources/images/birds/pixel_skin5_green.png"));
-        // Pipe skins
-        pipeSkins.add(new Skin(6,"Spring","PIPE","resources/images/pipes/pipe_spring.png"));
-        pipeSkins.add(new Skin(7,"Summer","PIPE","resources/images/pipes/pipe_summer.png"));
-        pipeSkins.add(new Skin(8,"Autumn","PIPE","resources/images/pipes/pipe_autumn.png"));
-        pipeSkins.add(new Skin(9,"Winer","PIPE","resources/images/pipes/pipe_winter.png"));
-        // Ground skins
-        groundSkins.add(new Skin(10,"Spring","GROUND","resources/images/grounds/ground_spring.png"));
-        groundSkins.add(new Skin(11,"Summer","GROUND","resources/images/grounds/ground_summer.png"));
-        groundSkins.add(new Skin(12,"Autumn","GROUND","resources/images/grounds/ground_autumn.png"));
-        groundSkins.add(new Skin(13,"Winter","GROUND","resources/images/grounds/ground_winter.png"));
-        // Background skins
-        backgroundSkins.add(new Skin(14,"Spring","BACKGROUND","resources/images/backgrounds/bg_spring.png"));
-        backgroundSkins.add(new Skin(15,"Summer","BACKGROUND","resources/images/backgrounds/bg_summer.png"));
-        backgroundSkins.add(new Skin(16,"Autumn","BACKGROUND","resources/images/backgrounds/bg_autumn.png"));
-        backgroundSkins.add(new Skin(17,"Winter","BACKGROUND","resources/images/backgrounds/bg_winter.png"));
+        birdSkins.clear();
+        pipeSkins.clear();
+        backgroundSkins.clear();
+        groundSkins.clear();
+
+        try {
+            SkinService skinService = new SkinService();
+
+            for(flappybird.model.Skin dbSkin : skinService.getAllSkins()){
+                if(!dbSkin.isActive()){
+                    continue;
+                }
+
+                Skin skin = new Skin(dbSkin.getId(), dbSkin.getSkinName(), dbSkin.getSkinType(), dbSkin.getImagePath(), dbSkin.getUnlockScore(), dbSkin.isActive());
+
+                switch(skin.getSkinType().toUpperCase()){
+                    case "BIRD":
+                        birdSkins.add(skin);
+                        break;
+                     case "PIPE":
+                        pipeSkins.add(skin);
+                        break;
+
+                    case "GROUND":
+                        groundSkins.add(skin);
+                        break;
+
+                    case "BACKGROUND":
+                        backgroundSkins.add(skin);
+                        break;
+
+                    default:
+                        System.err.println(
+                            "Loai skin khong hop le: "
+                            + skin.getSkinType()
+                        );
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Khong the tai skin tu database.");
+            e.printStackTrace();
+        }
     }
 
     public List<Skin> getBirdSkins() {

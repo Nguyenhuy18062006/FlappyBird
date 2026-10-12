@@ -47,6 +47,31 @@ CREATE TABLE USER_EQUIPPED_SKIN(
     FOREIGN KEY (skin_id) REFERENCES SKINS(id)
 );
 
+INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VALUE
+('Yellow', 'BIRD', 'resources/images/birds/pixel_skin1_yellow.png', 0, TRUE),
+('Blue',   'BIRD', 'resources/images/birds/pixel_skin2_blue.png', 100, TRUE),
+('Red',    'BIRD', 'resources/images/birds/pixel_skin3_red.png', 200, TRUE),
+('Pink',   'BIRD', 'resources/images/birds/pixel_skin4_pink.png', 300, TRUE),
+('Green',  'BIRD', 'resources/images/birds/pixel_skin5_green.png', 500, TRUE),
+
+-- PIPE
+('Spring', 'PIPE', 'resources/images/pipes/pipe_spring.png', 0, TRUE),
+('Summer', 'PIPE', 'resources/images/pipes/pipe_summer.png', 400, TRUE),
+('Autumn', 'PIPE', 'resources/images/pipes/pipe_autumn.png', 700, TRUE),
+('Winter', 'PIPE', 'resources/images/pipes/pipe_winter.png', 800, TRUE),
+
+-- GROUND
+('Spring', 'GROUND', 'resources/images/grounds/ground_spring.png', 0, TRUE),
+('Summer', 'GROUND', 'resources/images/grounds/ground_summer.png', 900, TRUE),
+('Autumn', 'GROUND', 'resources/images/grounds/ground_autumn.png', 1000, TRUE),
+('Winter', 'GROUND', 'resources/images/grounds/ground_winter.png', 1000, TRUE),
+
+-- BACKGROUND
+('Spring', 'BACKGROUND', 'resources/images/backgrounds/bg_spring.png', 0, TRUE),
+('Summer', 'BACKGROUND', 'resources/images/backgrounds/bg_summer.png', 200, TRUE),
+('Autumn', 'BACKGROUND', 'resources/images/backgrounds/bg_autumn.png', 300, TRUE),
+('Winter', 'BACKGROUND', 'resources/images/backgrounds/bg_winter.png', 400, TRUE);
+
 CREATE DATABASE IF NOT EXISTS `FlappyBird`;
 
 -- 2. Tạo tài khoản MySQL riêng cho dự án này

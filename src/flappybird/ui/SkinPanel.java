@@ -1,7 +1,5 @@
 package flappybird.ui;
 
-import flappybird.game.Skin;
-import flappybird.game.SkinManager;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,7 +8,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.ImageIcon;
+
+import flappybird.game.Skin;
+import flappybird.game.SkinManager;
 
 public class SkinPanel {
     private final int menuWidth = 720;
@@ -33,6 +35,12 @@ public class SkinPanel {
     private final SkinManager skinManager;
 
     private Skin selectedSkin;
+
+    private int currentScore = 0;
+
+    public void setCurrentScore(int score) {
+        this.currentScore = Math.max(0, score);
+    }
 
     public SkinPanel(SkinManager skinManager) {
         this.skinManager = skinManager;
@@ -252,24 +260,11 @@ public class SkinPanel {
     }
 
     // SKIN CARD
-    private void drawSkinCard(
-            Graphics2D g,
-            Skin skin,
-            int x,
-            int y,
-            int width,
-            int height) {
+    private void drawSkinCard( Graphics2D g, Skin skin, int x, int y, int width, int height) {
 
         g.setColor(new Color(245, 245, 245));
 
-        g.fillRoundRect(
-                x,
-                y,
-                width,
-                height,
-                12,
-                12
-        );
+        g.fillRoundRect(x, y, width, height, 12, 12);
 
         if (selectedSkin != null && selectedSkin.getId() == skin.getId()) {
 
@@ -282,18 +277,10 @@ public class SkinPanel {
             g.setStroke(new BasicStroke(1));
         }
 
-        g.drawRoundRect(
-                x,
-                y,
-                width,
-                height,
-                12,
-                12
-        );
+        g.drawRoundRect(x, y, width, height, 12, 12);
 
         // IMAGE
-        ImageIcon icon =
-                new ImageIcon(skin.getImagePath());
+        ImageIcon icon = new ImageIcon(skin.getImagePath());
 
         Image image = icon.getImage();
 
@@ -304,61 +291,41 @@ public class SkinPanel {
 
         int imageY = y + 12;
 
-        g.drawImage(
-                image,
-                imageX,
-                imageY,
-                imageSize,
-                imageSize,
-                null
-        );
+        g.drawImage(image, imageX, imageY, imageSize, imageSize, null);
 
         // NAME
         g.setColor(Color.BLACK);
 
-        g.setFont(
-                new Font("Arial", Font.BOLD, 12)
-        );
+        g.setFont( new Font("Arial", Font.BOLD, 12));
 
         FontMetrics fm = g.getFontMetrics();
 
         String name = skin.getSkinName();
 
-        int nameX =
-                x + (width - fm.stringWidth(name)) / 2;
+        int nameX = x + (width - fm.stringWidth(name)) / 2;
 
-        g.drawString(
-                name,
-                nameX,
-                y + 103
-        );
+        g.drawString(name, nameX, y + 103);
 
         // STATUS
-        g.setFont(
-                new Font("Arial", Font.PLAIN, 11)
-        );
+        g.setFont(new Font("Arial", Font.PLAIN, 11));
 
         String status;
 
-        if (selectedSkin != null
+        if (currentScore < skin.getUnlockScore()) {
+            status = "LOCKED";
+            g.setColor(Color.RED);
+        } else if (selectedSkin != null
                 && selectedSkin.getId() == skin.getId()) {
             status = "SELECTED";
             g.setColor(new Color(80, 160, 80));
         } else {
-            status = "SKIN";
+            status = "UNLOCKED";
             g.setColor(Color.BLACK);
         }
 
-        int statusX =
-                x + (width
-                - g.getFontMetrics().stringWidth(status))
-                / 2;
+        int statusX = x + (width - g.getFontMetrics().stringWidth(status)) / 2;
 
-        g.drawString(
-                status,
-                statusX,
-                y + 125
-        );
+        g.drawString(status, statusX, y + 125);
     }
 
     private List<Skin> getDisplayedSkins() {
@@ -467,17 +434,11 @@ public class SkinPanel {
     // CLICK SKIN
     // =====================================================
 
-    public Skin getClickedSkin(
-            int mouseX,
-            int mouseY,
-            int panelWidth,
-            int panelHeight) {
+    public Skin getClickedSkin(int mouseX, int mouseY, int panelWidth, int panelHeight) {
 
-        int menuX =
-                (panelWidth - menuWidth) / 2;
+        int menuX = (panelWidth - menuWidth) / 2;
 
-        int menuY =
-                (panelHeight - menuHeight) / 2;
+        int menuY = (panelHeight - menuHeight) / 2;
 
         int cardWidth = 130;
         int cardHeight = 145;
@@ -486,17 +447,13 @@ public class SkinPanel {
 
         int cardsPerRow = 4;
 
-        int totalCardsWidth =
-                cardsPerRow * cardWidth
-                + (cardsPerRow - 1) * cardGap;
+        int totalCardsWidth = cardsPerRow * cardWidth + (cardsPerRow - 1) * cardGap;
 
-        int cardStartX =
-                menuX + (menuWidth - totalCardsWidth) / 2;
+        int cardStartX = menuX + (menuWidth - totalCardsWidth) / 2;
 
         int cardStartY = menuY + 105;
 
-        List<Skin> skins =
-                getDisplayedSkins();
+        List<Skin> skins = getDisplayedSkins();
 
         for (int i = 0; i < skins.size(); i++) {
 
@@ -521,7 +478,13 @@ public class SkinPanel {
                     && mouseY <= menuY + menuHeight - 55
             ) {
 
-                return skins.get(i);
+                Skin skin = skins.get(i);
+
+                if (currentScore < skin.getUnlockScore()) {
+                    return null;
+                }
+
+                return skin;
             }
         }
 
@@ -538,20 +501,16 @@ public class SkinPanel {
             int panelWidth,
             int panelHeight) {
 
-        int menuX =
-                (panelWidth - menuWidth) / 2;
+        int menuX = (panelWidth - menuWidth) / 2;
 
-        int menuY =
-                (panelHeight - menuHeight) / 2;
+        int menuY = (panelHeight - menuHeight) / 2;
 
         int backWidth = 150;
         int backHeight = 35;
 
-        int backX =
-                menuX + (menuWidth - backWidth) / 2;
+        int backX = menuX + (menuWidth - backWidth) / 2;
 
-        int backY =
-                menuY + menuHeight - 45;
+        int backY = menuY + menuHeight - 45;
 
         return mouseX >= backX
                 && mouseX <= backX + backWidth

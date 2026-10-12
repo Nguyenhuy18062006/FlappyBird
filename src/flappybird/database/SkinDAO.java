@@ -12,8 +12,8 @@ import flappybird.model.Skin;
 public class SkinDAO {
     public void createSkin(Skin skin) throws SQLException {
         String sql = """
-                INSERT INTO SKINS (skin_name, skin_type, image_path)
-                VALUE(?, ?, ?);
+                INSERT INTO SKINS (skin_name, skin_type, image_path, unlock_score, is_active)
+                VALUE(?, ?, ?, ?, ?);
                 """;
         
         try(Connection connection = DatabaseConnection.getConnection();
@@ -21,6 +21,8 @@ public class SkinDAO {
             statement.setString(1, skin.getSkinName());
             statement.setString(2, skin.getSkinType());
             statement.setString(3, skin.getImagePath());
+            statement.setInt(4, skin.getUnlockScore());
+            statement.setBoolean(5, skin.isActive());
 
             statement.executeUpdate();
         }
@@ -37,7 +39,7 @@ public class SkinDAO {
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
-                    return new Skin(resultSet.getInt("id"), resultSet.getString("skin_name"), resultSet.getString("skin_type"), resultSet.getString("image_path"));
+                    return new Skin(resultSet.getInt("id"), resultSet.getString("skin_name"), resultSet.getString("skin_type"), resultSet.getString("image_path"), resultSet.getInt("unlock_score"), resultSet.getBoolean("is_active"));
                 }
             }
         }
@@ -55,7 +57,7 @@ public class SkinDAO {
         PreparedStatement statement = connection.prepareStatement(sql)){
             try(ResultSet resultSet = statement.executeQuery()){
                 while(resultSet.next()){
-                    Skin skin = new Skin(resultSet.getInt("id"), resultSet.getString("skin_name"), resultSet.getString("skin_type"), resultSet.getString("image_path"));
+                    Skin skin = new Skin(resultSet.getInt("id"), resultSet.getString("skin_name"), resultSet.getString("skin_type"), resultSet.getString("image_path"), resultSet.getInt("unlock_score"), resultSet.getBoolean("is_active"));
                     skins.add(skin);
                 }
             }
@@ -65,7 +67,7 @@ public class SkinDAO {
 
     public void updateSkin(Skin skin) throws SQLException{
         String sql = """
-                UPDATE SKINS SET skin_name = ?, skin_type = ?, image_path = ? WHERE id = ?;
+                UPDATE SKINS SET skin_name = ?, skin_type = ?, image_path = ?, unlock_score = ?, is_active = ? WHERE id = ?;
                 """;
         
         try(Connection connection = DatabaseConnection.getConnection();
@@ -73,7 +75,9 @@ public class SkinDAO {
             statement.setString(1, skin.getSkinName());
             statement.setString(2, skin.getSkinType());
             statement.setString(3, skin.getImagePath());
-            statement.setInt(4, skin.getId());
+            statement.setInt(4, skin.getUnlockScore());
+            statement.setBoolean(5, skin.isActive());
+            statement.setInt(6, skin.getId());
 
             statement.executeUpdate();
         }

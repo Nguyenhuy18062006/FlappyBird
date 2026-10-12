@@ -3,6 +3,7 @@ package flappybird.game;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
@@ -10,8 +11,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import flappybird.ui.GameOverPanel;
@@ -166,6 +170,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         addKeyListener(this);
         addMouseListener(this);
 
+        // Bắt phím ESC kể cả khi đang nhập tài khoản hoặc mật khẩu
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
+        getActionMap().put("escape", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleEscape();
+            }
+        });
+
         addMouseWheelListener(e -> {
             if (game.getState() == GameState.SKINS) {
                 skinPanel.scroll(e.getWheelRotation() * 30);
@@ -239,6 +252,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             updateRankingScrollPaneBounds();
         }
         else if (game.getState() == GameState.SKINS) {
+            skinPanel.setCurrentScore(game.getScore());
             skinPanel.drawSkinPanel((Graphics2D) g, getWidth(), getHeight());
         }
         else if (
@@ -314,17 +328,52 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
     }
 
     @Override
-    public void keyPressed(KeyEvent e){
-        if(e.getKeyCode() == KeyEvent.VK_SPACE 
-            || e.getKeyCode() == KeyEvent.VK_UP){
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE
+                || e.getKeyCode() == KeyEvent.VK_UP) {
             game.jump();
-        } 
-        else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            if(game.getState() == GameState.PLAYING){
+        }
+    }
+
+    private void handleEscape() {
+        GameState state = game.getState();
+
+        switch (state) {
+            case PLAYING:
                 game.setState(GameState.PAUSE);
-            }
-            System.out.println("Thoat game");
-        } 
+                break;
+
+            case PAUSE:
+                game.setState(GameState.READY);
+                break;
+
+            case SKINS:
+                game.setState(GameState.MENU);
+                break;
+
+            case RANKING:
+                hideRankingScrollPane();
+                game.setState(GameState.MENU);
+                break;
+
+            case LOGIN:
+                loginPanel.setVisible(false);
+                game.setState(GameState.MENU);
+                requestFocusInWindow();
+                break;
+
+            case REGISTER:
+                registerPanel.setVisible(false);
+                game.setState(GameState.MENU);
+                requestFocusInWindow();
+                break;
+
+            default:
+                // MENU và GAME_OVER: không làm gì
+                break;
+        }
+
+        repaint();
     }
     @Override
     public void keyReleased(KeyEvent e) {
