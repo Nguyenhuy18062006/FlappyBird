@@ -150,3 +150,15 @@ settings
 ├── background_skin
 └── sound_volume
 ```
+
+## Dự án nộp cho thầy:
++ Dùng JDBC, và java Swing để hoàn thiện phần GUI và kết nối database ổn định chạy trên local
+## Dự án mở rộng:
++ Dùng REST API để phát triển thêm cho dự án chạy trên cả local lẫn online
++ Mở rộng nạp tiền để mua vật phẩm
++ Dùng hệ thống kết nối để cập nhật liên tục khi mất mạng thì vẫn update local storage còn khi có wifi thì cập nhật lên server chung và cập nhật lại bẳng xếp hạng
+
+# Công nghệ sử dụng:
++ Frontend: Java Swing, FX(application), HTML(web)...
++ Backend: Java, REST API, Postman,...
++ Database: MySQL, Docker, cloud server,...
