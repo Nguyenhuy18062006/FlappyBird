@@ -73,6 +73,9 @@ FlappyBird/
 │       │   ├── Game.java
 │       │   ├── GamePanel.java
 │       │   ├── Bird.java
+│       │   ├── SkinManager.java
+│       │   ├── GameState.java
+│       │   ├── Skin.java
 │       │   ├── PipePair.java
 │       │   ├── Background.java
 │       │   ├── Ground.java
@@ -85,18 +88,28 @@ FlappyBird/
 │       │   ├── SkinDAO.java
 │       │   └── ScoreDAO.java
 │       │
+│       ├── service/
+│       │   ├── UserService.java
+│       │   ├── SkinService.java
+│       │   └── ScoreService.java
+│       │
 │       ├── model/
 │       │   ├── User.java
 │       │   ├── Skin.java
 │       │   └── Score.java
 │       │
-│       └── ui/
-│           ├── LoginPanel.java
-│           ├── SkinPanel.java
-│           ├── RankingPanel.java
-│           ├── GameOverPanel.java
-│           ├── RegisterPanel.java
-│           └── MenuPanel.java
+│       ├── ui/
+│       │   ├── LoginPanel.java
+│       │   ├── SkinPanel.java
+│       │   ├── RankingPanel.java
+│       │   ├── PausePanel.java
+│       │   ├── GameOverPanel.java
+│       │   ├── RegisterPanel.java
+│       │   └── MenuPanel.java
+│       │
+│       ├── .env
+│       ├── .gitignore
+│       └── README.md
 │
 ├── resources/
 │   ├── images/
@@ -107,47 +120,58 @@ FlappyBird/
 │   │
 │   └── sounds/
 │       ├── jump.wav
-│       ├── hit.wav
-│       └── background.wav
+│       ├── jump2.wav
+│       ├── score.wav
+│       └── die.wav
 │
 ├── database/
-│   └── flappybird.sql
-│
-├── .env
-├── .gitignore
-└── README.md
+    └── flappybird.sql
 ```
 
 ## 3: Database
+
 ```text
 users
-├── id
-├── user_name
+├── id (PK)
+├── user_name (UNIQUE)
 ├── password
-└── hightest_score
+└── highest_score
 
 skins
-├── id
-├── name
-├── type
-└── image_path
-
-user_skins
-├── user_id
-└── skin_id
+├── id (PK)
+├── skin_name
+├── skin_type          -- BIRD | PIPE | GROUND | BACKGROUND
+├── image_path
+├── unlock_score
+└── is_active
 
 scores
-├── id
-├── user_id
+├── id (PK)
+├── user_id (FK -> users.id)
 ├── score
-└── created_at
+└── create_at
 
-- Có thẻ mở rộng:
+user_skins             -- skin mà user đã mở khóa
+├── user_id (PK, FK -> users.id)
+└── skin_id (PK, FK -> skins.id)
+
+user_equipped_skin     -- skin đang dùng theo từng loại
+├── user_id (PK, FK -> users.id)
+├── skin_type (PK)
+└── skin_id (FK -> skins.id)
+```
+
+### Quan hệ
+
+- `users` 1 - N `scores`: mỗi user có nhiều lượt chơi.
+- `users` N - N `skins` (qua `user_skins`): user mở khóa nhiều skin.
+- `users` 1 - N `user_equipped_skin`: mỗi user có tối đa 1 skin đang dùng cho mỗi `skin_type`.
+
+### Có thể mở rộng
+
+```text
 settings
-├── user_id
-├── bird_skin
-├── pipe_skin
-├── background_skin
+├── user_id (PK, FK -> users.id)
 └── sound_volume
 ```
 
