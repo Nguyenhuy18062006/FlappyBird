@@ -113,6 +113,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             }
             else{
                 System.out.println("Sai username hoặc password!");
+                loginPanel.setErrorMessage("Sai tên đăng nhập hoặc mật khẩu.");
             }
         });
 
@@ -153,6 +154,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
                 requestFocusInWindow();
             }else{
                 System.out.println("Đăng ký thất bại: tài khoản đã tồn tại hoặc có lỗi database");
+                registerPanel.setErrorMessage("Tài khoản đã tồn tại hoặc có lỗi hệ thống.");
             }
         });
 
