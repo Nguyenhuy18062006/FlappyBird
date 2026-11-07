@@ -3,6 +3,7 @@ package flappybird.service;
 import java.sql.SQLException;
 import java.util.List;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import flappybird.database.UserDAO;
 import flappybird.model.User;
 
@@ -14,6 +15,8 @@ public class UserService {
     }
 
     public void createUser(User user) throws SQLException{
+        String hashed = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(hashed);
         userDAO.createUser(user);
     }
 
@@ -44,9 +47,11 @@ public class UserService {
             return null;
         }
 
-        if (!user.getPassword().equals(password)) {
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+        if (!result.verified) {
             return null;
         }
+
 
         return user;
     }

@@ -126,7 +126,7 @@ public class UserDAO {
 
             try(ResultSet resultSet = statement.executeQuery()){
                 while(resultSet.next()){
-                    User user = new User(resultSet.getInt("id"), resultSet.getNString("user_name"), "", resultSet.getInt("highest_score"));
+                    User user = new User(resultSet.getInt("id"), resultSet.getString("user_name"), "", resultSet.getInt("highest_score"));
                     users.add(user);
                 }
             }

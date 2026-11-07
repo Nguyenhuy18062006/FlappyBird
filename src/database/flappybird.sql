@@ -82,3 +82,13 @@ GRANT ALL PRIVILEGES ON `FlappyBird`.* TO 'FlappyBird'@'localhost';
 
 -- 4. Áp dụng thay đổi
 FLUSH PRIVILEGES;
+
+SELECT id, skin_name, skin_type, image_path,
+       unlock_score, is_active
+FROM SKINS
+ORDER BY id;
+
+DELETE FROM USER_EQUIPPED_SKIN WHERE user_id = 3;
+DELETE FROM USER_SKINS WHERE user_id = 3;
+DELETE FROM SCORES WHERE user_id = 3;
+DELETE FROM USERS WHERE id = 3;
