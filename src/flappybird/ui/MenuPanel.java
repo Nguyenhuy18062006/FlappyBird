@@ -55,6 +55,7 @@ public class MenuPanel {
                 "PLAY",
                 "SKINS",
                 "RANKING",
+                "ACCOUNT",
                 "LOGOUT",
                 "EXIT"
             };
@@ -144,8 +145,9 @@ public class MenuPanel {
             drawButton( g2, "PLAY", buttonX, startY, buttonWidth, buttonHeight ); 
             drawButton( g2, "SKINS", buttonX, startY + 1 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
             drawButton( g2, "RANKING", buttonX, startY + 2 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
-            drawButton( g2, "LOGOUT", buttonX, startY + 3 * (buttonHeight + gap), buttonWidth, buttonHeight ); 
-            drawButton( g2, "EXIT", buttonX, startY + 4 * (buttonHeight + gap), buttonWidth, buttonHeight );
+            drawButton( g2, "ACCOUNT", buttonX, startY + 3 * (buttonHeight + gap), buttonWidth, buttonHeight );
+            drawButton( g2, "LOGOUT", buttonX, startY + 4 * (buttonHeight + gap), buttonWidth, buttonHeight );
+            drawButton( g2, "EXIT", buttonX, startY + 5 * (buttonHeight + gap), buttonWidth, buttonHeight );
         }
     }
 }

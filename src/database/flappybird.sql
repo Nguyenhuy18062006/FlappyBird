@@ -1,3 +1,10 @@
+-- =====================================================
+-- FlappyBird - Script tạo lại toàn bộ database
+-- Chạy cả file một lần (Ctrl + Shift + Enter trong Workbench)
+-- CẢNH BÁO: dòng DROP bên dưới sẽ XÓA SẠCH dữ liệu cũ
+-- =====================================================
+
+DROP DATABASE IF EXISTS FlappyBird;
 CREATE DATABASE FlappyBird;
 
 USE FlappyBird;
@@ -10,44 +17,53 @@ CREATE TABLE USERS (
 );
 
 CREATE TABLE SKINS(
-	id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     skin_name VARCHAR(100) NOT NULL,
     skin_type VARCHAR(50) NOT NULL,
-    image_path varchar(255) NOT NULL,
+    image_path VARCHAR(255) NOT NULL,
     unlock_score INT NOT NULL DEFAULT 0,
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+-- ON DELETE CASCADE: khi xóa 1 user (hoặc 1 skin) thì MySQL tự xóa
+-- luôn các dòng ở bảng con đang tham chiếu tới nó, không bị lỗi khóa ngoại.
+
 CREATE TABLE SCORES(
-	id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     score INT NOT NULL,
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (user_id) REFERENCES USERS(id)
+
+    CONSTRAINT fk_scores_user
+        FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE
 );
 
 CREATE TABLE USER_SKINS (
-	user_id INT NOT NULL,
+    user_id INT NOT NULL,
     skin_id INT NOT NULL,
     PRIMARY KEY (user_id, skin_id),
-    
-    FOREIGN KEY (user_id) REFERENCES USERS(id),
-    FOREIGN KEY (skin_id) REFERENCES SKINS(id)
+
+    CONSTRAINT fk_user_skins_user
+        FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_skins_skin
+        FOREIGN KEY (skin_id) REFERENCES SKINS(id) ON DELETE CASCADE
 );
 
 CREATE TABLE USER_EQUIPPED_SKIN(
-	user_id INT NOT NULL,
+    user_id INT NOT NULL,
     skin_type VARCHAR(50) NOT NULL,
     skin_id INT NOT NULL,
 
     PRIMARY KEY (user_id, skin_type),
 
-    FOREIGN KEY (user_id) REFERENCES USERS(id),
-    FOREIGN KEY (skin_id) REFERENCES SKINS(id)
+    CONSTRAINT fk_equipped_user
+        FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    CONSTRAINT fk_equipped_skin
+        FOREIGN KEY (skin_id) REFERENCES SKINS(id) ON DELETE CASCADE
 );
 
-INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VALUE
+INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VALUES
+-- BIRD
 ('Yellow', 'BIRD', 'resources/images/birds/pixel_skin1_yellow.png', 0, TRUE),
 ('Blue',   'BIRD', 'resources/images/birds/pixel_skin2_blue.png', 100, TRUE),
 ('Red',    'BIRD', 'resources/images/birds/pixel_skin3_red.png', 200, TRUE),
@@ -72,23 +88,10 @@ INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VAL
 ('Autumn', 'BACKGROUND', 'resources/images/backgrounds/bg_autumn.png', 300, TRUE),
 ('Winter', 'BACKGROUND', 'resources/images/backgrounds/bg_winter.png', 400, TRUE);
 
-CREATE DATABASE IF NOT EXISTS `FlappyBird`;
+-- Tài khoản MySQL riêng cho dự án (IF NOT EXISTS để chạy lại không bị lỗi)
+CREATE USER IF NOT EXISTS 'FlappyBird'@'localhost' IDENTIFIED BY 'flappybird123';
 
--- 2. Tạo tài khoản MySQL riêng cho dự án này
-CREATE USER 'FlappyBird'@'localhost' IDENTIFIED BY 'flappybird123';
-
--- 3. CHỈ CẤP QUYỀN trên đúng Database của dự án này (An toàn cho dự án)
+-- Chỉ cấp quyền trên đúng database của dự án
 GRANT ALL PRIVILEGES ON `FlappyBird`.* TO 'FlappyBird'@'localhost';
 
--- 4. Áp dụng thay đổi
 FLUSH PRIVILEGES;
-
-SELECT id, skin_name, skin_type, image_path,
-       unlock_score, is_active
-FROM SKINS
-ORDER BY id;
-
-DELETE FROM USER_EQUIPPED_SKIN WHERE user_id = 3;
-DELETE FROM USER_SKINS WHERE user_id = 3;
-DELETE FROM SCORES WHERE user_id = 3;
-DELETE FROM USERS WHERE id = 3;

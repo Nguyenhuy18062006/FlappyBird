@@ -12,12 +12,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.AbstractAction;
+import java.sql.SQLException;
+
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
+import flappybird.ui.AccountPanel;
 import flappybird.ui.GameOverPanel;
 import flappybird.ui.LoginPanel;
 import flappybird.ui.MenuPanel;
@@ -40,6 +45,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
     private LoginPanel loginPanel;
     private RegisterPanel registerPanel;
+    private AccountPanel accountPanel;
     private GameState previousState;
 
     public GamePanel() {
@@ -55,6 +61,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
         loginPanel = new LoginPanel();
         registerPanel = new RegisterPanel();
+        accountPanel = new AccountPanel();
 
         //Dùng null layout để tự đặt vị trí JScrollPane.
         // Vì GamePanel đang tự vẽ giao diện bằng Graphics.
@@ -62,9 +69,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
         add(loginPanel);
         add(registerPanel);
+        add(accountPanel);
 
         loginPanel.setVisible(false);
         registerPanel.setVisible(false);
+        accountPanel.setVisible(false);
+
+        setupAccountPanelActions();
 
         updateAuthPanelBounds();
 
@@ -219,6 +230,127 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
         loginPanel.setBounds(x, y, panelWidth, panelHeight);
         registerPanel.setBounds(x, y, panelWidth, panelHeight);
+
+        int accountX = (getWidth() - AccountPanel.PANEL_WIDTH) / 2;
+        int accountY = (getHeight() - AccountPanel.PANEL_HEIGHT) / 2;
+        accountPanel.setBounds(accountX, accountY, AccountPanel.PANEL_WIDTH, AccountPanel.PANEL_HEIGHT);
+    }
+
+    // ================= ACCOUNT =================
+
+    // Gắn hành động cho các nút trong AccountPanel.
+    // Luồng chung: AccountPanel (lấy input) -> Game -> Service -> DAO -> MySQL
+    private void setupAccountPanelActions() {
+
+        // DELETE 1 lượt chơi
+        accountPanel.getDeleteScoreButton().addActionListener(e -> {
+            int scoreId = accountPanel.getSelectedScoreId();
+            if (scoreId == -1) {
+                accountPanel.setMessage("Hãy chọn 1 lượt chơi trong bảng trước.", true);
+                return;
+            }
+
+            int choice = JOptionPane.showConfirmDialog(this,
+                    "Xóa lượt chơi này? Không thể hoàn tác.",
+                    "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (choice != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            try {
+                if (game.deleteMyScore(scoreId)) {
+                    refreshAccountPanel();
+                    accountPanel.setMessage("Đã xóa lượt chơi.", false);
+                } else {
+                    accountPanel.setMessage("Không xóa được lượt chơi này.", true);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                accountPanel.setMessage("Lỗi database khi xóa lượt chơi.", true);
+            }
+        });
+
+        // UPDATE mật khẩu
+        accountPanel.getChangePasswordButton().addActionListener(e -> {
+            String error = accountPanel.getChangePasswordValidationMessage();
+            if (!error.isEmpty()) {
+                accountPanel.setMessage(error, true);
+                return;
+            }
+
+            try {
+                if (game.changePassword(accountPanel.getOldPassword(), accountPanel.getNewPassword())) {
+                    accountPanel.clearPasswordFields();
+                    accountPanel.setMessage("Đổi mật khẩu thành công!", false);
+                } else {
+                    accountPanel.setMessage("Mật khẩu hiện tại không đúng.", true);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                accountPanel.setMessage("Lỗi database khi đổi mật khẩu.", true);
+            }
+        });
+
+        // DELETE tài khoản
+        accountPanel.getDeleteAccountButton().addActionListener(e -> {
+            JPasswordField passwordField = new JPasswordField();
+            Object[] message = {
+                "Toàn bộ lịch sử chơi sẽ bị xóa vĩnh viễn.",
+                "Nhập mật khẩu để xác nhận:",
+                passwordField
+            };
+
+            int choice = JOptionPane.showConfirmDialog(this, message,
+                    "Xóa tài khoản", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (choice != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            try {
+                if (game.deleteAccount(new String(passwordField.getPassword()))) {
+                    hideAccountPanel(); // game.deleteAccount đã tự logout và về MENU
+                    JOptionPane.showMessageDialog(this, "Đã xóa tài khoản.");
+                } else {
+                    accountPanel.setMessage("Mật khẩu không đúng, chưa xóa tài khoản.", true);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                accountPanel.setMessage("Lỗi database khi xóa tài khoản.", true);
+            }
+        });
+
+        // BACK
+        accountPanel.getBackButton().addActionListener(e -> {
+            game.playClickSound();
+            hideAccountPanel();
+            game.setState(GameState.MENU);
+        });
+    }
+
+    // READ: tải lại thông tin + lịch sử chơi từ database
+    private void refreshAccountPanel() {
+        try {
+            accountPanel.loadData(game.getCurrentUser(), game.getMyScores());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            accountPanel.showLoadError();
+            accountPanel.setMessage("Không tải được dữ liệu từ database.", true);
+        }
+    }
+
+    private void showAccountPanel() {
+        game.setState(GameState.ACCOUNT);
+        accountPanel.clearPasswordFields();
+        accountPanel.clearMessage();
+        refreshAccountPanel();
+        accountPanel.setVisible(true);
+        repaint();
+    }
+
+    private void hideAccountPanel() {
+        accountPanel.setVisible(false);
+        repaint();
+        requestFocusInWindow();
     }
 
     @Override
@@ -260,10 +392,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         else if (
                 game.getState() == GameState.LOGIN
                 || game.getState() == GameState.REGISTER
+                || game.getState() == GameState.ACCOUNT
         ) {
 
             // Không vẽ game ở đây.
-            // LoginPanel / RegisterPanel sẽ tự hiển thị
+            // LoginPanel / RegisterPanel / AccountPanel sẽ tự hiển thị
             // vì chúng là JPanel con của GamePanel.
         }
         else{
@@ -370,6 +503,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
                 requestFocusInWindow();
                 break;
 
+            case ACCOUNT:
+                hideAccountPanel();
+                game.setState(GameState.MENU);
+                break;
+
             default:
                 // MENU và GAME_OVER: không làm gì
                 break;
@@ -421,6 +559,10 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
                 registerPanel.setVisible(false);
                 loginPanel.requestFocusInWindow();
                 repaint();
+                System.out.println(game.getState());
+            }
+            else if (button.equals("ACCOUNT")) {
+                showAccountPanel();
                 System.out.println(game.getState());
             }
             else if (button.equals("LOGOUT")) {

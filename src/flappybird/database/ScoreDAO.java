@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import flappybird.model.Score;
-import flappybird.model.User;
 
 public class ScoreDAO {
     public void createScore(Score score) throws SQLException{
@@ -64,9 +63,51 @@ public class ScoreDAO {
         return scores;
     }
 
-    public Score getScoresByUserId(int userId) throws SQLException{
+    // READ (nhiều dòng): lấy toàn bộ lịch sử chơi của 1 user, ván mới nhất lên đầu.
+    // Dùng while (không phải if) để đọc HẾT các dòng trong ResultSet.
+    public List<Score> getScoresByUserId(int userId) throws SQLException{
         String sql = """
-                SELECT * FROM SCORES WHERE user_id = ?;
+                SELECT * FROM SCORES WHERE user_id = ?
+                ORDER BY create_at DESC, id DESC
+                """;
+
+        List<Score> scores = new ArrayList<>();
+
+        try(Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setInt(1, userId);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                while(resultSet.next()){
+                    scores.add(new Score(resultSet.getInt("id"), resultSet.getInt("user_id"), resultSet.getInt("score"), resultSet.getTimestamp("create_at").toLocalDateTime()));
+                }
+            }
+        }
+        return scores;
+    }
+
+    // DELETE có kiểm tra chủ sở hữu: thêm "AND user_id = ?" để user A
+    // không thể xóa điểm của user B dù biết id của ván chơi.
+    // executeUpdate() trả về số dòng bị ảnh hưởng -> > 0 nghĩa là xóa thành công.
+    public boolean deleteScoreOfUser(int scoreId, int userId) throws SQLException{
+        String sql = """
+                DELETE FROM SCORES WHERE id = ? AND user_id = ?
+                """;
+
+        try(Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setInt(1, scoreId);
+            statement.setInt(2, userId);
+
+            return statement.executeUpdate() > 0;
+        }
+    }
+
+    // Điểm cao nhất còn lại của user (dùng để tính lại highest_score sau khi xóa 1 ván).
+    // COALESCE(MAX(score), 0): nếu user không còn ván nào thì MAX = NULL -> trả về 0.
+    public int getMaxScoreOfUser(int userId) throws SQLException{
+        String sql = """
+                SELECT COALESCE(MAX(score), 0) FROM SCORES WHERE user_id = ?
                 """;
 
         try(Connection connection = DatabaseConnection.getConnection();
@@ -75,11 +116,11 @@ public class ScoreDAO {
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
-                    return new Score(resultSet.getInt("id"), resultSet.getInt("user_id"), resultSet.getInt("score"), resultSet.getTimestamp("create_at").toLocalDateTime());
+                    return resultSet.getInt(1); // cột thứ 1 của kết quả
                 }
             }
         }
-        return null;
+        return 0;
     }
 
     public void deleteScore(int scoreId) throws SQLException{
@@ -92,27 +133,6 @@ public class ScoreDAO {
             statement.setInt(1, scoreId);
 
             statement.executeUpdate();
-        }
-    }
-
-    public List<User> getTopScores() throws SQLException{
-        List<User> users = new ArrayList<>();
-
-        String sql = """
-                SELECT id, user_name, password, highest_score FROM USERS
-                ORDER BY highest_score DESC, user_name ASC LIMIT 20
-                """;
-
-        try(Connection connection = DatabaseConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)){
-            try(ResultSet resultSet = statement.executeQuery()){
-                while (resultSet.next()){
-                    User user = new User(resultSet.getInt("id"), resultSet.getString("user_name"), resultSet.getString("password"), resultSet.getInt("highest_score"));
-                    
-                    users.add(user);
-                }
-            }
-            return users;
         }
     }
 }

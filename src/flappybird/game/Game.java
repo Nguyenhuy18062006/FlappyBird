@@ -103,6 +103,7 @@ public class Game {
     public void update(){
         if(state == GameState.MENU ||
         state == GameState.RANKING ||
+        state == GameState.ACCOUNT ||
         state == GameState.SKINS ||
         state == GameState.LOGIN ||
         state == GameState.REGISTER ||
@@ -273,6 +274,48 @@ public class Game {
     public void logout() {
         currentUser = null;
         state = GameState.MENU;
+    }
+
+    // ================= ACCOUNT (CRUD cho user đang đăng nhập) =================
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    // READ: lịch sử chơi của user hiện tại
+    public List<Score> getMyScores() throws SQLException {
+        if (currentUser == null) {
+            return new ArrayList<>();
+        }
+        return scoreService.getScoresByUserId(currentUser.getId());
+    }
+
+    // DELETE: xóa 1 lượt chơi của mình (highest_score được tính lại trong Service)
+    public boolean deleteMyScore(int scoreId) throws SQLException {
+        if (currentUser == null) {
+            return false;
+        }
+        return scoreService.deleteScoreOfUser(scoreId, currentUser);
+    }
+
+    // UPDATE: đổi mật khẩu
+    public boolean changePassword(String oldPassword, String newPassword) throws SQLException {
+        if (currentUser == null) {
+            return false;
+        }
+        return userService.changePassword(currentUser, oldPassword, newPassword);
+    }
+
+    // DELETE: xóa tài khoản, thành công thì tự đăng xuất
+    public boolean deleteAccount(String password) throws SQLException {
+        if (currentUser == null) {
+            return false;
+        }
+        boolean deleted = userService.deleteAccount(currentUser, password);
+        if (deleted) {
+            logout();
+        }
+        return deleted;
     }
 
     public boolean register(String userName, String password){
