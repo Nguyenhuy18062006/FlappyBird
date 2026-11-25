@@ -16,8 +16,7 @@ public class PipePair {
         int maxGapY = 280; //Ống trên dài nhất
 
         int gapY = (int)(Math.random() * (maxGapY - minGapY + 1)) + minGapY;
-        //+1 để int ép kiểu không bị làm tròn xuống thành 100 -> 319;
-        int topY = gapY - 320; //tính ống trên topY = 250 - 320 = -70
+        int topY = gapY - 320;
         int bottomY = gapY + gap; //Tính ống dưới
 
         topPipe = new Pipe(x, topY, true, skin);
@@ -48,7 +47,6 @@ public class PipePair {
     public boolean isColliding(Ellipse2D birdBounds){
         return topPipe.getBounds().intersects(birdBounds.getBounds()) || //Đụng top chết
         bottomPipe.getBounds().intersects(birdBounds.getBounds()); //Đụng bottom chết
-        //Không đụng false sống
     }
 
     public boolean isScored(){
@@ -59,29 +57,3 @@ public class PipePair {
         this.scored = scored;
     }
 }
-// Bước 1:
-// Math.random()
-//        ↓
-// 0.0 → <1.0
-
-// Bước 2:
-// × 221
-//        ↓
-// 0.0 → <221.0
-//        ↓
-// (int)
-//        ↓
-// 0 → 220
-
-// Bước 3:
-// + 100
-//        ↓
-// 100 → 320
-
-// Score 0     → gap 160
-// Score 5     → gap 150
-// Score 10    → gap 140
-// Score 15    → gap 130
-// Score 20    → gap 120
-// Score 30    → gap 110
-// Score 40+   → gap 110

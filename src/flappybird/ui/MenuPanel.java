@@ -14,22 +14,15 @@ public class MenuPanel {
     public void drawButton(Graphics2D g2, String text, int x, int y, int width, int height){
         g2.setColor(Color.GREEN);
         g2.fillRoundRect(x, y, width, height, 15, 15);
-        // x :  Tọa độ X của góc trên bên trái hình chữ nhật.
-        // y : Tọa độ Y của góc trên bên trái hình chữ nhật.
-        // width : Chiều rộng của hình chữ nhật.
-        // height : Chiều cao của hình chữ nhật.
-        // 15 là bo góc
         g2.setColor(Color.BLACK);
         g2.setFont(new Font("Arial", Font.BOLD, 18));
-        //cho biết thông tin về font hiện tại.
 
         FontMetrics fm = g2.getFontMetrics();
 
          // Căn chữ vào giữa nút
         int textX = x + (width - fm.stringWidth(text)) / 2;
 
-        // getAscent() lấy độ cao phần chữ phía trên baseline
-        // Dùng để căn chữ theo chiều dọc
+        // Căn chữ theo chiều dọc
         int textY = y + (height + fm.getAscent()) / 2 - 5;
 
         g2.drawString(text, textX, textY);
@@ -86,7 +79,6 @@ public class MenuPanel {
 
     public void drawMenu(Graphics g, int panelWidth, int panelHeight, boolean loggedIn) {
 
-        // Graphics2D có thêm nhiều chức năng vẽ so với Graphics
         Graphics2D g2 = (Graphics2D) g;
 
         int menuWidth = 320;
@@ -97,25 +89,21 @@ public class MenuPanel {
         int menuY = (panelHeight - menuHeight) / 2 - 35;
 
         // Khung Menu
-        // 180 là độ trong suốt (Alpha)
         g2.setColor(new Color(255, 255, 255, 180));
         g2.fillRoundRect(menuX, menuY, menuWidth, menuHeight, 20, 20);
 
         // Tiêu đề
         g2.setFont(new Font("Arial", Font.BOLD, 30));
 
-        // HSBtoRGB chuyển màu từ hệ HSB sang RGB
         int rgb = Color.HSBtoRGB(hue, 1.0f, 1.0f);
         g2.setColor(new Color(rgb));
 
         String title = "Chim Đập Cánh";
 
-        // FontMetrics dùng để lấy thông tin/kích thước của chữ
         FontMetrics fm = g2.getFontMetrics();
 
         // Lấy chiều rộng chữ để căn giữa
         int titleX = menuX + (menuWidth - fm.stringWidth(title)) / 2;
-        //Lấy chiều rộng menu - chiều rộng chữ rồi chia 2 → chữ nằm giữa menu.
 
         g2.drawString(title, titleX, menuY + 60);
 

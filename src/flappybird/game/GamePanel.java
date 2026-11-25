@@ -63,8 +63,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         registerPanel = new RegisterPanel();
         accountPanel = new AccountPanel();
 
-        //Dùng null layout để tự đặt vị trí JScrollPane.
-        // Vì GamePanel đang tự vẽ giao diện bằng Graphics.
         setLayout(null);
 
         add(loginPanel);
@@ -199,13 +197,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             }
         });
 
-        //Không tạo nó trong paintComponent().
         rankingJScrollPane = rankingPanel.createRankingScrollPane();
-        //Add vào GamePanel nhưng ẩn lúc đầu.
         add(rankingJScrollPane);
         rankingJScrollPane.setVisible(false);
 
-        timer = new Timer(16, e ->{ //Timer(khoảng thời gian,việc cần thực hiện);  -> là cú pháp của lambda expression nhận e thực hiện lệnh bên phải
+        timer = new Timer(16, e ->{
             game.update();
             // Chỉ tải Top 3 một lần khi vừa chuyển sang GAME_OVER.
             if (game.getState() == GameState.GAME_OVER
@@ -215,7 +211,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             previousState = game.getState();
             repaint();
         });
-        //1 giây / 0.016 giây ≈ 62.5 lần
         timer.start();
         
         requestFocusInWindow();
@@ -361,7 +356,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         game.getBackground2().draw(g);
 
         // Kiểm tra trạng thái
-        if(game.getState() == GameState.MENU){//=> tức là Game mới là thằng quản lý trạng thái, còn GamePanel chỉ nhìn trạng thái đó để quyết định vẽ cái gì.
+        if(game.getState() == GameState.MENU){
             menuPanel.drawMenu(g, getWidth(), getHeight(), game.isLoggedIn());
 
             game.getGround1().draw(g);
@@ -395,9 +390,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
                 || game.getState() == GameState.ACCOUNT
         ) {
 
-            // Không vẽ game ở đây.
-            // LoginPanel / RegisterPanel / AccountPanel sẽ tự hiển thị
-            // vì chúng là JPanel con của GamePanel.
         }
         else{
             drawGame(g);
@@ -415,7 +407,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         g.drawString("Score: " + game.getScore(), 20, 30);
     }
 
-    // Đặt vị trí và kích thước JScrollPane.
     private void updateRankingScrollPaneBounds() {
 
         if (rankingJScrollPane == null) {
@@ -428,18 +419,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         int menuY = (getHeight() - menuHeight) / 2;
 
         
-        //JScrollPane nằm ở giữa khung Ranking.
-        // menuY + 70:
-        //    bắt đầu bên dưới title.
-
-        // 500 x 280:
-        //  vùng hiển thị danh sách.
         rankingJScrollPane.setBounds(menuX + 50, menuY + 70, 500, 280);
     }
 
-    /*
-     * Hiện JScrollPane khi vào Ranking.
-     */
     private void showRankingScrollPane() {
         rankingPanel.refreshRanking();
 
@@ -451,9 +433,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
         repaint();
     }
 
-    /*
-     * Ẩn JScrollPane khi rời Ranking.
-     */
     private void hideRankingScrollPane() {
 
         rankingJScrollPane.setVisible(false);
@@ -538,11 +517,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
 
             game.playClickSound();
 
-            // ==       → hai biến có trỏ cùng object không?
-            //.equals  → hai object có cùng nội dung không?
             if (button.equals("PLAY")){ //equals() so sánh nội dung.// còn == so sánh 2 chuỗi luôn luôn là false vì ở 2 ô nhớ khác nhau là 2 object khác nhau
                 game.resetGame();
-                System.out.println(game.getState()); // in console để sau này mò lỗi cho dễ
+                System.out.println(game.getState());
             }
             else if (button.equals("SKINS")) {
                 game.setState(GameState.SKINS);
@@ -684,25 +661,3 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
     public void mouseExited(MouseEvent e) {
     }
 }
-/*Timer.start()
-     ↓
-chờ 16ms
-     ↓
-gọi actionPerformed(...)
-     ↓
-e -> {
-    bird.update();
-    repaint();
-}
-     ↓
-chờ 16ms
-     ↓
-gọi actionPerformed(...)
-     ↓
-e -> {
-    bird.update();
-    repaint();
-}
-     ↓
-chờ 16ms
-     ↓ */

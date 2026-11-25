@@ -74,9 +74,7 @@ public class SkinPanel {
                 25
         );
 
-        // =========================
         // TITLE
-        // =========================
 
         g.setFont(new Font("Arial", Font.BOLD, 32));
 
@@ -93,9 +91,7 @@ public class SkinPanel {
                 menuY + 42
         );
 
-        // =========================
         // CATEGORY BUTTONS
-        // =========================
 
         int buttonWidth = 120;
         int buttonHeight = 34;
@@ -125,9 +121,7 @@ public class SkinPanel {
             );
         }
 
-        // =========================
         // SKIN CARDS
-        // =========================
 
         List<Skin> skins = getDisplayedSkins();
 
@@ -382,9 +376,7 @@ public class SkinPanel {
         return skins;
     }
 
-    // =====================================================
     // CLICK CATEGORY
-    // =====================================================
 
     public String getClickedCategory(
             int mouseX,
@@ -430,9 +422,7 @@ public class SkinPanel {
         return null;
     }
 
-    // =====================================================
     // CLICK SKIN
-    // =====================================================
 
     public Skin getClickedSkin(int mouseX, int mouseY, int panelWidth, int panelHeight) {
 
@@ -491,9 +481,7 @@ public class SkinPanel {
         return null;
     }
 
-    // =====================================================
     // CLICK BACK
-    // =====================================================
 
     public boolean isBackClicked(
             int mouseX,
@@ -518,9 +506,7 @@ public class SkinPanel {
                 && mouseY <= backY + backHeight;
     }
 
-    // =====================================================
     // CATEGORY
-    // =====================================================
 
     public void setSelectedCategory(String category) {
         selectedCategory = category;
@@ -571,9 +557,7 @@ public class SkinPanel {
         return selectedCategory;
     }
 
-    // =====================================================
     // SIZE
-    // =====================================================
 
     public int getMenuWidth() {
         return menuWidth;

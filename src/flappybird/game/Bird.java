@@ -33,13 +33,6 @@ public class Bird {
         g.drawImage(image, x, y, width, height, null);
     }
 
-//        bird       → ảnh PNG
-//        100        → tọa độ X
-//        200        → tọa độ Y
-//        60         → chiều rộng
-//        60         → chiều cao
-//        this       → component đang vẽ
-    
     public int getX(){
         return x;
     }
@@ -56,9 +49,6 @@ public class Bird {
         velocityY += gravity;
         y += velocityY;
     }
-    //velocityY tăng
-    //y tăng
-    //Chim rơi xuống
 
     public void jump(){
         velocityY = -8;

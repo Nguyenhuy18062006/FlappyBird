@@ -37,13 +37,7 @@ public class ScoreService {
         scoreDAO.deleteScore(scoreId);
     }
 
-    /*
-     * User tự xóa 1 lượt chơi của mình.
-     * Nghiệp vụ (vì sao nằm ở Service chứ không ở DAO):
-     *   1. Xóa ván chơi (chỉ xóa được nếu ván đó thuộc về user).
-     *   2. Nếu ván vừa xóa là kỷ lục thì highest_score phải giảm theo
-     *      -> tính lại MAX(score) từ các ván còn lại rồi cập nhật USERS.
-     */
+    // Xóa 1 lượt chơi rồi tính lại highest_score
     public boolean deleteScoreOfUser(int scoreId, User user) throws SQLException{
         boolean deleted = scoreDAO.deleteScoreOfUser(scoreId, user.getId());
 

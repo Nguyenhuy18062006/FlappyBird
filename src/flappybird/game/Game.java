@@ -36,7 +36,7 @@ public class Game {
     private Skin selectedBackgroundSkin;
     private Skin selectedGroundSkin;
 
-    private void initializeGame(){ //Khởi tạo game để dễ sử dụng hơn tránh lặp code
+    private void initializeGame(){
         bird = new Bird(200, 200, selectedBirdSkin);
         pipes = new ArrayList<>();
 
@@ -65,7 +65,7 @@ public class Game {
         selectedBackgroundSkin = skinManager.getBackgroundSkins().get(0);
         initializeGame();
 
-        soundManager = new SoundManager();//âm thanh không phải trạng thái của 1 ván game không cần tạo lại
+        soundManager = new SoundManager();
 
         state = GameState.MENU;
     }
@@ -129,7 +129,7 @@ public class Game {
             for(PipePair pipe : pipes){
                 pipe.update();
                 // Kiểm tra chim đã vượt qua cặp ống và cặp ống này chưa được tính điểm
-                if(!pipe.isScored() && pipe.getX() + 70 < bird.getX()){ //!pipe.isScored() → ống chưa được tính điểm
+                if(!pipe.isScored() && pipe.getX() + 70 < bird.getX()){
                     score++;
                     // Đánh dấu cặp ống đã được tính điểm để tránh cộng nhiều lần
                     pipe.setScored(true);
@@ -148,20 +148,14 @@ public class Game {
             for(PipePair pipe : pipes){
                 if(pipe.isColliding(bird.getBounds())){ //Kiểm tra có đụng không
                     endGame(); // Gọi end game cho gọn và có các chức năng lưu điểm
-                    // die(); //Tạo tiếng chết
-                    // state = GameState.GAME_OVER; //True thì thực hiện lệnh này
                     return;
                 }
             }
             if(bird.getY() + bird.getHeight() >= 445){ //Nếu chim đi quá 445px y thì true
                 endGame(); 
-                // die(); //Tọa tiếng chết
-                // state = GameState.GAME_OVER; //Đúng lệnh thực thi
                 return;
             }
             if(bird.getY() <= -200){
-                // die();
-                // state = GameState.GAME_OVER;
                 endGame();
                 return;
             }

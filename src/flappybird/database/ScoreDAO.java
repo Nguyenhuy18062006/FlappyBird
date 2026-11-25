@@ -64,7 +64,6 @@ public class ScoreDAO {
     }
 
     // READ (nhiều dòng): lấy toàn bộ lịch sử chơi của 1 user, ván mới nhất lên đầu.
-    // Dùng while (không phải if) để đọc HẾT các dòng trong ResultSet.
     public List<Score> getScoresByUserId(int userId) throws SQLException{
         String sql = """
                 SELECT * FROM SCORES WHERE user_id = ?
@@ -88,7 +87,6 @@ public class ScoreDAO {
 
     // DELETE có kiểm tra chủ sở hữu: thêm "AND user_id = ?" để user A
     // không thể xóa điểm của user B dù biết id của ván chơi.
-    // executeUpdate() trả về số dòng bị ảnh hưởng -> > 0 nghĩa là xóa thành công.
     public boolean deleteScoreOfUser(int scoreId, int userId) throws SQLException{
         String sql = """
                 DELETE FROM SCORES WHERE id = ? AND user_id = ?

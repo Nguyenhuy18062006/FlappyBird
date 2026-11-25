@@ -1,5 +1,6 @@
 package flappybird;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
  
 import flappybird.game.GamePanel; 
@@ -12,13 +13,15 @@ public class Main {
         
         frame.setTitle("Flappy Bird");
         //Đặt tên cho cửa sổ
+
+        frame.setIconImage(new ImageIcon("resources/images/birds/pixel_skin1_yellow.png").getImage());
+        //Icon cửa sổ
         
         frame.setSize(860, 540);
         //Kích thước tính bằng pixel
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //(Dòng này rất quan trọng) Nếu không có khi bấm X để tắt cửa sổ thì chương trình vẫn chạy ngầm
-        //Còn có thì chương trình sẽ kết thúc.
+        //Tắt hẳn chương trình khi đóng cửa sổ
         
         frame.setLocationRelativeTo(null);
         //Đặt cửa sổ xuất hiện ở giữa màn hình.

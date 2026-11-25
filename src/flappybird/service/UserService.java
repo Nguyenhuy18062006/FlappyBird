@@ -61,11 +61,7 @@ public class UserService {
         return BCrypt.verifyer().verify(rawPassword.toCharArray(), user.getPassword()).verified;
     }
 
-    /*
-     * UPDATE: đổi mật khẩu.
-     * Phải xác nhận mật khẩu cũ trước, sau đó HASH mật khẩu mới rồi mới lưu.
-     * Không bao giờ lưu mật khẩu thô vào database.
-     */
+    // UPDATE: đổi mật khẩu (xác nhận mật khẩu cũ, hash mật khẩu mới)
     public boolean changePassword(User user, String oldPassword, String newPassword) throws SQLException{
         if (!checkPassword(user, oldPassword)) {
             return false;
@@ -77,11 +73,7 @@ public class UserService {
         return true;
     }
 
-    /*
-     * DELETE: xóa tài khoản.
-     * Bắt nhập lại mật khẩu để tránh xóa nhầm.
-     * Các bảng SCORES, USER_SKINS, USER_EQUIPPED_SKIN tự xóa theo nhờ ON DELETE CASCADE.
-     */
+    // DELETE: xóa tài khoản (dữ liệu liên quan tự xóa nhờ ON DELETE CASCADE)
     public boolean deleteAccount(User user, String password) throws SQLException{
         if (!checkPassword(user, password)) {
             return false;

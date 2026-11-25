@@ -24,17 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import flappybird.model.Score;
 import flappybird.model.User;
 
-/*
- * Màn hình ACCOUNT - nơi thể hiện đủ CRUD cho user đang đăng nhập:
- *   READ   : bảng lịch sử các lượt chơi
- *   DELETE : xóa 1 lượt chơi được chọn
- *   UPDATE : đổi mật khẩu
- *   DELETE : xóa tài khoản
- * (CREATE nằm ở màn hình Đăng ký và khi lưu điểm sau mỗi ván.)
- *
- * Panel này CHỈ lo hiển thị + lấy dữ liệu người dùng nhập.
- * Việc gọi database do GamePanel -> Game -> Service -> DAO đảm nhận.
- */
+// Màn hình quản lý tài khoản: lịch sử chơi, xóa lượt chơi, đổi mật khẩu, xóa tài khoản
 public class AccountPanel extends JPanel {
 
     public static final int PANEL_WIDTH = 600;

@@ -22,10 +22,8 @@ public class UserDAO {
             statement.setString(1, user.getUserName());
             statement.setString( 2, user.getPassword());
 
-            //Yêu cầu JDBC thực thi câu lệnh SQL nằm trong biến sql và thực hiện thay đổi dữ liệu trong database.
             statement.executeUpdate();
         }
-        //Vậy bản chất PreparedStatement đang chuẩn bị câu truy vấn sql trên
     }
 
     public User getUseById(int userId) throws SQLException{
@@ -37,7 +35,6 @@ public class UserDAO {
         PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, userId);
 
-            //Nhận kết quả truy vấn về resultSet
             try(ResultSet resultSet = statement.executeQuery()){
                 if(resultSet.next()){
                     return new User(resultSet.getInt("id"), resultSet.getString("user_name"), resultSet.getString("password"), resultSet.getInt("highest_score"));

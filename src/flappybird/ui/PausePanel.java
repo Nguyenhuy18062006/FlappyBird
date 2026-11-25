@@ -117,7 +117,7 @@ public class PausePanel {
 
         g2.setFont(new Font("Arial", Font.PLAIN, 14));
         for(int i = 0; i < players.length; i++){
-            int y = menuY + 285 + 10 + i * 20; // 285 là khoảng cách tự căn từ đỉnh menu đến chữ, còn i * 20 là i tăng để cho biết khoảng cách giữa các dòng
+            int y = menuY + 285 + 10 + i * 20;
             g2.drawString((i + 1) + ". " + players[i], menuX + 70, y);
             
             g2.drawString(String.valueOf(scores[i]), menuX + 220, y);

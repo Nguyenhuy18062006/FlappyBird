@@ -1,6 +1,6 @@
 package flappybird.game;
 
-public enum GameState{ //GameState không phải một đối tượng game
+public enum GameState{
     MENU, //→ chính là trạng thái lúc vừa mở game.
     SKINS, //Skins
     RANKING, //Ranking
