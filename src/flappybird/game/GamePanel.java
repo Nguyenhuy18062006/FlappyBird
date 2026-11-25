@@ -381,7 +381,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener{
             updateRankingScrollPaneBounds();
         }
         else if (game.getState() == GameState.SKINS) {
-            skinPanel.setCurrentScore(game.getScore());
+            // Đã đăng nhập: mở khóa skin theo điểm cao nhất của tài khoản; chơi khách: theo điểm ván vừa chơi
+            int unlockScore = game.isLoggedIn()
+                    ? Math.max(game.getCurrentUser().getHighestScore(), game.getScore())
+                    : game.getScore();
+            skinPanel.setCurrentScore(unlockScore);
             skinPanel.drawSkinPanel((Graphics2D) g, getWidth(), getHeight());
         }
         else if (
