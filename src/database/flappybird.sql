@@ -69,6 +69,20 @@ INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VAL
 ('Red',    'BIRD', 'resources/images/birds/pixel_skin3_red.png', 200, TRUE),
 ('Pink',   'BIRD', 'resources/images/birds/pixel_skin4_pink.png', 300, TRUE),
 ('Green',  'BIRD', 'resources/images/birds/pixel_skin5_green.png', 500, TRUE),
+('Demon',        'BIRD', 'resources/images/birds/pixel_demon.png', 700, TRUE),
+('Dragonkin',    'BIRD', 'resources/images/birds/pixel_dragonkin.png', 900, TRUE),
+('Druid',        'BIRD', 'resources/images/birds/pixel_druid.png', 1100, TRUE),
+('Elf',          'BIRD', 'resources/images/birds/pixel_elf.png', 1300, TRUE),
+('Fairy',        'BIRD', 'resources/images/birds/pixel_fairy.png', 1500, TRUE),
+('Knight',       'BIRD', 'resources/images/birds/pixel_knight.png', 1800, TRUE),
+('Mage',         'BIRD', 'resources/images/birds/pixel_mage.png', 2100, TRUE),
+('Necromancer',  'BIRD', 'resources/images/birds/pixel_necromancer.png', 2400, TRUE),
+('Paladin',      'BIRD', 'resources/images/birds/pixel_paladin.png', 2700, TRUE),
+('Phoenix',      'BIRD', 'resources/images/birds/pixel_phoenix.png', 3000, TRUE),
+('Priest',       'BIRD', 'resources/images/birds/pixel_priest.png', 3400, TRUE),
+('Rogue',        'BIRD', 'resources/images/birds/pixel_rogue.png', 3800, TRUE),
+('Vampire',      'BIRD', 'resources/images/birds/pixel_vampire.png', 4200, TRUE),
+('Witch',        'BIRD', 'resources/images/birds/pixel_witch.png', 4600, TRUE),
 
 -- PIPE
 ('Spring', 'PIPE', 'resources/images/pipes/pipe_spring.png', 0, TRUE),
@@ -82,11 +96,17 @@ INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VAL
 ('Autumn', 'GROUND', 'resources/images/grounds/ground_autumn.png', 1000, TRUE),
 ('Winter', 'GROUND', 'resources/images/grounds/ground_winter.png', 1000, TRUE),
 
+
 -- BACKGROUND
 ('Spring', 'BACKGROUND', 'resources/images/backgrounds/bg_spring.png', 0, TRUE),
 ('Summer', 'BACKGROUND', 'resources/images/backgrounds/bg_summer.png', 200, TRUE),
 ('Autumn', 'BACKGROUND', 'resources/images/backgrounds/bg_autumn.png', 300, TRUE),
-('Winter', 'BACKGROUND', 'resources/images/backgrounds/bg_winter.png', 400, TRUE);
+('Winter', 'BACKGROUND', 'resources/images/backgrounds/bg_winter.png', 400, TRUE),
+('Magical Sky Kingdom',     'BACKGROUND', 'resources/images/backgrounds/bg_01_magical_sky_kingdom.png', 0, TRUE),
+('Enchanted Forest',        'BACKGROUND', 'resources/images/backgrounds/bg_02_enchanted_forest.png', 200, TRUE),
+('Dragon Volcanic Land',    'BACKGROUND', 'resources/images/backgrounds/bg_03_dragon_volcanic_land.png', 400, TRUE),
+('Crystal Magic City',      'BACKGROUND', 'resources/images/backgrounds/bg_04_crystal_magic_city.png', 600, TRUE),
+('Moonlight Fantasy Kingdom','BACKGROUND', 'resources/images/backgrounds/bg_05_moonlight_fantasy_kingdom.png', 800, TRUE);
 
 -- Tài khoản MySQL riêng cho dự án (IF NOT EXISTS để chạy lại không bị lỗi)
 CREATE USER IF NOT EXISTS 'FlappyBird'@'localhost' IDENTIFIED BY 'flappybird123';
