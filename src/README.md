@@ -1,3 +1,61 @@
+# Flappy Bird: Java Swing + JDBC + MySQL
+
+Game Flappy Bird viết bằng Java Swing, lưu tài khoản, điểm và skin trong MySQL qua JDBC. Người chơi đăng ký/đăng nhập, chơi để lập kỷ lục, xem bảng xếp hạng, đổi skin (mở khóa theo điểm cao nhất) và quản lý tài khoản.
+
+## 🔑 Tài khoản đăng nhập
+
+| Tài khoản | Mật khẩu | Ghi chú |
+|---|---|---|
+| `fullskin` | `Test@123` | Mở khóa toàn bộ skin |
+| `admin` | `Test@123` | Mở khóa một nửa skin |
+| `player1` → `player5` | `Test@123` | Tài khoản phụ |
+
+## Hướng dẫn chạy nhanh
+
+### Bước 1: Tạo database (đã có sẵn dữ liệu mẫu)
+
+1. Mở **MySQL Workbench**, đăng nhập bằng tài khoản **root**.
+2. Mở file `src/database/flappybird.sql` và chạy cả file (**Ctrl + Shift + Enter**).
+
+Script sẽ tự:
+- tạo database `FlappyBird` và 5 bảng,
+- thêm 36 skin (19 chim, 4 ống, 4 mặt đất, 9 hình nền),
+- thêm 7 tài khoản mẫu và lịch sử chơi,
+- tạo tài khoản MySQL `FlappyBird` / `flappybird123` để game kết nối.
+
+> Lưu ý: script có `DROP DATABASE`, nên chạy lại sẽ xóa dữ liệu cũ và tạo lại dữ liệu mẫu từ đầu.
+
+### Bước 2: Chạy game
+
+- **Cách 1 (nhanh nhất):** bấm đúp `dist/FlappyBird/FlappyBird.exe`. Không cần cài Java.
+- **Cách 2:** mở dự án bằng NetBeans, chạy `src/flappybird/Main.java`.
+
+MySQL phải đang chạy ở `localhost:3306`.
+
+### Bước 3: Đăng nhập bằng tài khoản mẫu ở đầu file
+
+### Điều khiển
+
+| Phím / chuột | Tác dụng |
+|---|---|
+| `Space` hoặc `↑` | Chim bay lên |
+| `Esc` | Khi đang chơi: tạm dừng / chơi tiếp. Ở các màn khác: quay về menu |
+| Chuột trái | Bấm các nút trên menu |
+
+### Chức năng chính
+
+| Màn hình | Chức năng |
+|---|---|
+| **LOGIN / REGISTER** | Đăng nhập, đăng ký (mật khẩu ≥ 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt) |
+| **PLAY** | Chơi game; khi thua, điểm tự lưu và cập nhật kỷ lục |
+| **SKINS** | Chọn skin cho chim, ống, mặt đất, hình nền; skin mở khóa theo điểm cao nhất |
+| **RANKING** | Bảng xếp hạng top 20 theo điểm cao nhất |
+| **ACCOUNT** | Xem lịch sử chơi, xóa lượt chơi, đổi mật khẩu, xóa tài khoản |
+
+Chi tiết CRUD và cách dùng JDBC ở **mục 4**, cách build file `.exe` ở **mục 5**.
+
+---
+
 ## 1:Hướng dẫn sử dụng Git với NetBeans
 
 Tài liệu này hướng dẫn quy trình làm việc hằng ngày với Git trong NetBeans khi phát triển dự án FlappyBird.
@@ -259,7 +317,7 @@ try (Connection connection = DatabaseConnection.getConnection();
 
 ### 4.5 Cách demo CRUD
 
-1. Chạy `database/flappybird.sql` trong MySQL Workbench bằng tài khoản root.
+1. Chạy `src/database/flappybird.sql` trong MySQL Workbench bằng tài khoản root. Có thể đăng nhập ngay bằng tài khoản mẫu (xem phần *Hướng dẫn chạy nhanh*).
 2. **REGISTER** để tạo tài khoản (**C**), rồi **LOGIN** (**R**).
 3. Chơi vài ván. Mỗi ván được lưu điểm (**C** Score) và cập nhật kỷ lục (**U** User).
 4. Vào **RANKING** để xem bảng xếp hạng (**R**).
@@ -269,3 +327,60 @@ try (Connection connection = DatabaseConnection.getConnection();
    - đổi mật khẩu (**U**), sau đó LOGOUT và đăng nhập lại bằng mật khẩu mới,
    - bấm *Xóa tài khoản* (**D**) và nhập mật khẩu để xác nhận.
 6. Kiểm tra lại trong Workbench: `SELECT * FROM USERS; SELECT * FROM SCORES;`
+
+## 5: Build file .exe
+
+Sau khi build, chỉ cần bấm đúp `FlappyBird.exe` là chạy game, không cần mở NetBeans hay chạy `Main`. File `.exe` chứa sẵn Java bên trong nên máy khác **không cần cài Java**.
+
+### 5.1 Yêu cầu
+- **JDK 14 trở lên** (dự án đang dùng JDK 26). `jpackage` có sẵn trong JDK.
+- **Maven** (lệnh `mvn`).
+- Kiểm tra bằng các lệnh: `java -version`, `jpackage --version`, `mvn -v`. Nếu máy báo *"not recognized"* thì cần thêm thư mục `bin` của JDK hoặc Maven vào biến môi trường **PATH**.
+
+### 5.2 Cách nhanh: chạy script
+
+Mở CMD tại **thư mục gốc dự án** (thư mục có `pom.xml`) rồi chạy:
+
+```bat
+build-exe.bat
+```
+
+Kết quả nằm ở `dist\FlappyBird\FlappyBird.exe`.
+
+### 5.3 Cách thủ công: từng lệnh (script ở trên làm đúng các bước này)
+
+```bat
+:: 1. Biên dịch code và đóng gói thành target\flappybird-1.0-SNAPSHOT.jar
+mvn clean package
+
+:: 2. Gom jar của game và các thư viện (MySQL Connector, BCrypt) vào một thư mục
+mkdir target\jpackage-input
+copy target\flappybird-1.0-SNAPSHOT.jar target\jpackage-input\
+mvn dependency:copy-dependencies -DoutputDirectory=target\jpackage-input
+
+:: 3. Tạo icon con chim vàng (.ico) từ ảnh PNG
+java tools\MakeIcon.java resources\images\birds\pixel_skin1_yellow.png icon\flappybird.ico
+
+:: 4. Đóng gói jar + Java + icon thành FlappyBird.exe
+jpackage --type app-image --name FlappyBird --icon icon\flappybird.ico --input target\jpackage-input --main-jar flappybird-1.0-SNAPSHOT.jar --main-class flappybird.Main --dest dist
+
+:: 5. Copy ảnh và âm thanh vào cạnh file .exe (code nạp ảnh bằng đường dẫn resources/...)
+xcopy /e /i resources dist\FlappyBird\resources
+```
+
+| Lệnh | Tác dụng |
+|---|---|
+| `mvn clean package` | Xóa bản build cũ, biên dịch `src/` thành file `.jar` |
+| `mvn dependency:copy-dependencies` | Tải về và copy các thư viện khai báo trong `pom.xml` |
+| `java tools\MakeIcon.java ...` | Chuyển PNG thành `.ico` vuông, gồm các cỡ 16/32/48/256 |
+| `jpackage --type app-image` | Tạo thư mục ứng dụng có `.exe` kèm Java runtime (không cần cài đặt) |
+| `--icon` | Icon của file `.exe` |
+| `--main-class flappybird.Main` | Class có hàm `main` để chạy game |
+
+### 5.4 Lưu ý
+- Khi gửi game cho người khác, phải gửi **cả thư mục `dist\FlappyBird`** (nén zip), không gửi riêng file `.exe`. Bên trong còn thư mục `runtime` (Java) và `resources` (ảnh, âm thanh).
+- Máy chạy game vẫn phải **bật MySQL** và đã chạy `database/flappybird.sql`.
+- Sửa code xong thì chạy lại `build-exe.bat` để cập nhật file `.exe`.
+- Muốn đổi icon sang chim màu khác thì đổi `pixel_skin1_yellow.png` thành ảnh khác trong thư mục `resources/images/birds/`.
+- Nếu Explorer vẫn hiện icon cũ, đó là do Windows lưu cache icon. Đổi tên thư mục `dist\FlappyBird` hoặc khởi động lại Explorer.
+- Thư mục `dist/` đã có trong `.gitignore`, nên bản build không bị đẩy lên GitHub.

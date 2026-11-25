@@ -2,7 +2,6 @@ package flappybird.game;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import javax.swing.ImageIcon;
 
 public class Ground {
     private int x;
@@ -22,7 +21,7 @@ public class Ground {
 
         this.speed = 3;
 
-        image = new ImageIcon(skin.getImagePath()).getImage();
+        image = skin.loadImage();
     }
 
     public void draw(Graphics g){

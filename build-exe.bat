@@ -21,10 +21,14 @@ copy /y target\flappybird-1.0-SNAPSHOT.jar "%INPUT%\" >nul
 call mvn -q dependency:copy-dependencies -DoutputDirectory="%INPUT%" -DincludeScope=runtime
 if errorlevel 1 goto :error
 
-echo [3/4] Tao FlappyBird.exe bang jpackage...
+echo [3/4] Tao icon con chim vang va FlappyBird.exe bang jpackage...
+java tools\MakeIcon.java resources\images\birds\pixel_skin1_yellow.png icon\flappybird.ico
+if errorlevel 1 goto :error
+
 if exist "dist\%APP_NAME%" rmdir /s /q "dist\%APP_NAME%"
 jpackage --type app-image ^
   --name %APP_NAME% ^
+  --icon icon\flappybird.ico ^
   --input "%INPUT%" ^
   --main-jar flappybird-1.0-SNAPSHOT.jar ^
   --main-class flappybird.Main ^

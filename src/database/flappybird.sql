@@ -108,6 +108,40 @@ INSERT INTO SKINS(skin_name, skin_type, image_path, unlock_score, is_active) VAL
 ('Crystal Magic City',      'BACKGROUND', 'resources/images/backgrounds/bg_04_crystal_magic_city.png', 600, TRUE),
 ('Moonlight Fantasy Kingdom','BACKGROUND', 'resources/images/backgrounds/bg_05_moonlight_fantasy_kingdom.png', 800, TRUE);
 
+-- =====================================================
+-- DỮ LIỆU MẪU ĐỂ TEST (đăng nhập được ngay)
+-- Tất cả tài khoản dùng chung mật khẩu: Test@123
+-- Mật khẩu đã được hash bằng BCrypt (cost 12), giống lúc đăng ký trong game
+--   fullskin : điểm cao nhất 5000 -> mở khóa toàn bộ 36/36 skin
+--   admin    : điểm cao nhất 750  -> mở khóa 18/36 skin (một nửa)
+--   player1..player5 : điểm thấp hơn, để xem bảng xếp hạng và skin bị khóa
+-- =====================================================
+INSERT INTO USERS(user_name, password, highest_score) VALUES
+('admin',   '$2a$12$QFooO7Dmip71Nf8E0fENAelK3pUg/D/JTmqjbMSzA8B9ztiTKCfZe', 750),
+('player1', '$2a$12$adwb5oIR4yepEYFMO3f2qefB2IHcrF/97V6G8VgEKaeRb21AFKWdm', 620),
+('player2', '$2a$12$6eib1vTA4KFgoNlx/esxtO6UwcQuH3cnVerNywacW8o2JvtSbHVt2', 480),
+('player3', '$2a$12$8h4O5KC8j6izSb0mvW.vqeQjvnydbkt6pAJopIR72I8M8C2egXPUK', 320),
+('player4', '$2a$12$W6zimlnMxNAffza4d.kLJu..IcQkQliinl.sbccJDUMUWRC1GS7Z.', 150),
+('player5', '$2a$12$mZ7UgJsuk4ErG0TJfmj3besiPWP2DzX4cd//uRJEua.qwyE7Q4eI.', 0),
+('fullskin', '$2a$12$hQ6wwRq9dEquc.Ncq5AAb./teZQ5Tyj0TbU7TbEjObXDemANnfW6G', 5000);
+
+INSERT INTO SCORES(user_id, score, create_at) VALUES
+(1,  250, '2026-11-20 09:15:00'),
+(1,  540, '2026-11-21 20:30:00'),
+(1,  750, '2026-11-23 21:05:00'),
+(2,  180, '2026-11-20 10:00:00'),
+(2,  410, '2026-11-22 19:45:00'),
+(2,  620, '2026-11-24 15:20:00'),
+(3,  230, '2026-11-21 08:40:00'),
+(3,  480, '2026-11-23 16:10:00'),
+(4,   90, '2026-11-22 11:25:00'),
+(4,  320, '2026-11-24 20:00:00'),
+(5,   40, '2026-11-23 14:00:00'),
+(5,  150, '2026-11-24 18:35:00'),
+(7, 2300, '2026-11-21 19:00:00'),
+(7, 4100, '2026-11-23 20:15:00'),
+(7, 5000, '2026-11-25 10:30:00');
+
 -- Tài khoản MySQL riêng cho dự án (IF NOT EXISTS để chạy lại không bị lỗi)
 CREATE USER IF NOT EXISTS 'FlappyBird'@'localhost' IDENTIFIED BY 'flappybird123';
 

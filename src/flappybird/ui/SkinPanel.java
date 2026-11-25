@@ -9,7 +9,6 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 
 import flappybird.game.Skin;
 import flappybird.game.SkinManager;
@@ -274,9 +273,7 @@ public class SkinPanel {
         g.drawRoundRect(x, y, width, height, 12, 12);
 
         // IMAGE
-        ImageIcon icon = new ImageIcon(skin.getImagePath());
-
-        Image image = icon.getImage();
+        Image image = skin.loadImage();
 
         int imageSize = 70;
 

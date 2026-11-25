@@ -3,7 +3,6 @@ package flappybird.game;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.geom.Ellipse2D;
-import javax.swing.ImageIcon;
 
 public class Bird {
     private int x;
@@ -26,7 +25,7 @@ public class Bird {
         this.velocityY = 0;
         this.gravity = 0.5;
 
-        image = new ImageIcon(skin.getImagePath()).getImage();
+        image = skin.loadImage();
     }
     
     public void draw(Graphics g){
